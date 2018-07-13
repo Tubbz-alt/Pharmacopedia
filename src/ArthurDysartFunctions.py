@@ -120,7 +120,6 @@ def import_data(import_path):
 
     # Initialize dictionary for imported data
     imported_data = {}
-    print("TEST")
     # Safely open and close text file
     with open(import_path, 'r', ) as target_file:
         # Iterate over whole file
