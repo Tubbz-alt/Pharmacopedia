@@ -120,8 +120,9 @@ def import_data(import_path):
 
     # Initialize dictionary for imported data
     imported_data = {}
+    print("TEST")
     # Safely open and close text file
-    with open(import_path, 'r', encoding="utf-8") as target_file:
+    with open(import_path, 'r', ) as target_file:
         # Iterate over whole file
         for line in target_file:
             # Remove line break character
