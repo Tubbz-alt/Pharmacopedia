@@ -26,11 +26,17 @@ def check_path(target_path, is_input_path=True):
     """
     ## Check input path
     if is_input_path:
+        # For input file, check path length
+        if len(target_path) > 100:
+            raise OSError("Input path is too long.\nShorten path and run again.")
         # For input file, ensure path exists
         if not os.path.isfile(target_path):
             raise OSError("Input file not found in \"input\" directory.\nPlease confirm run and again.")
     ## Check output path
     else:
+        # For output file, check path length
+        if len(target_path) > 100:
+            raise OSError("Output path is too long.\nShorten path and run again.")
         # For output file, ensure path does not exist
         if os.path.isfile(target_path):
             raise OSError("Output file already exists in \"output\" directory.\nPlease back up, remove, and run again.")
@@ -51,7 +57,7 @@ def parse_check(parsed_line):
         None
     """
 
-    def alpha_only(target_string):
+    def alphanumeric(target_string):
         """
         Investigate integrity of entry from imported data.
     
@@ -62,9 +68,9 @@ def parse_check(parsed_line):
             (boolean): True if numeric characters found in name strings.
         """
         # Check for non-alphabetical characters in given string
-        return all( char.isalpha() for char in target_string if char not in [".","\'"," ","-"] )
+        return any(char.isdigit() for char in target_string)
 
-    def numbers_only(target_string):
+    def numeric(target_string):
         """
         Investigate integrity of entry from imported data.
     
@@ -72,31 +78,31 @@ def parse_check(parsed_line):
             target_string (string): input string to be checked for numeric characters.
     
         Returns:
-            (boolean): True if numeric or "." characters found in name strings.
+            (boolean): True if numeric characters found in name strings.
         """
         # Check for non-alphabetical characters in given string
-        return all( char.isdigit() for char in target_string if char not in [".","\'"," ","-"] )
+        return all(char.isdigit() for char in target_string)
 
     # Determine if correct parsing of data entry
     if len(parsed_line) != 5:
         # Data entry contains more than 5 elements
-        raise IndexError("Entry {} split incorrectly with {} elements.\nCheck then run again.".format(parsed_line[0], len(parsed_line)))
+        raise IndexError("Entry {} split incorrectly.\nCheck then run again.".format(parsed_line[0]))
     # Determine if entry ID contains only numeric characters
-    if not numbers_only(parsed_line[0]):
+    if not numeric(parsed_line[0]):
         # Entry ID contains alphabetical characters
-        raise TypeError("Entry {} has ID which contains non-numeric characters.\nCheck then run again.".format(parsed_line[0]))
+        raise TypeError("Entry {} has ID which contains non-numeric charaacters.\nCheck then run again.".format(parsed_line[0]))
     # Determine if user last name contains only alphabetical characters
-    if not alpha_only(parsed_line[1]):
+    if alphanumeric(parsed_line[1]):
         # User last name contains numeric characters
-        raise TypeError("Entry {} has user last name \"{}\" which contains non-alpha characters.\nCheck then run again.".format(parsed_line[0], parsed_line[1]))
+        raise TypeError("Entry {} has user last name which contains numbers.\nCheck then run again.".format(parsed_line[0]))
     # Determine if user first name contains only alphabetical characters
-    if not alpha_only(parsed_line[2]):
+    if alphanumeric(parsed_line[2]):
         # User first name contains alphabetical characters
-        raise TypeError("Entry {} has user first name \"{}\" which contains non-numeric characters.\nCheck then run again.".format(parsed_line[0], parsed_line[2]))
+        raise TypeError("Entry {} has user first name which contains numbers.\nCheck then run again.".format(parsed_line[0]))
     # Determine if drug cost contains only numeric characters
-    if not numbers_only(parsed_line[4]):
+    if not numeric(parsed_line[4]):
         # Drug cost contains alphabetical characters
-        raise TypeError("Entry {} has cost \"{}\" which contains non-numeric charaacters.\nCheck then run again.".format(parsed_line[0], parsed_line[4]))
+        raise TypeError("Entry {} has cost which contains non-numeric charaacters.\nCheck then run again.".format(parsed_line[0]))
     # Data entry passes integrity test
     return None
 
@@ -115,7 +121,7 @@ def import_data(import_path):
     # Initialize dictionary for imported data
     imported_data = {}
     # Safely open and close text file
-    with open(import_path, 'r') as target_file:
+    with open(import_path, 'r', ) as target_file:
         # Iterate over whole file
         for line in target_file:
             # Remove line break character
@@ -162,7 +168,7 @@ def analyze_data(drug, all_data, processed_data):
     num_prescriber = sum( [ 1 for prescriber in all_prescribers ] )
 
     # For each drug, find all costs
-    all_costs = [ float(e['cost']) for e in all_data if e['drug_name'] == drug_name ]
+    all_costs = [ int(e['cost']) for e in all_data if e['drug_name'] == drug_name ]
     # For each drug, calculate total cost
     total_cost = sum( all_costs )
 
@@ -226,7 +232,7 @@ def export_data(all_drugs_sorted, processed_data, export_path):
         for drug in all_drugs_sorted:
             # Extract "num_prescriber"
             num_prescriber = str( processed_data[drug]["num_prescriber"] )
-            total_cost = "{:.2f}".format( processed_data[drug]["total_cost"] )
+            total_cost = str( processed_data[drug]["total_cost"] )
             # Create string of final values
             export_text = ",".join( [ drug, num_prescriber, total_cost ] )
             # Add line break to export string

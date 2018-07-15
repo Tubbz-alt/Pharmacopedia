@@ -16,7 +16,7 @@ import ArthurDysartFunctions as ad
 """ MAIN MODULE """
 if __name__ == "__main__":
     # Set traceback errors off
-    #sys.tracebacklimit = None
+    sys.tracebacklimit = None
     # Initialze input variables from terminal
     import_path = sys.argv[1]
     export_path = sys.argv[-1]
