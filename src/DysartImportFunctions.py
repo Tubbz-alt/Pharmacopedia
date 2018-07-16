@@ -65,7 +65,7 @@ def get_args(terminal_args):
         IndexError: number of terminal arguments are unknown.
     """
     # Identifies number of arguments from terminal
-    num_args = len(terminal_args)
+    num_args = len(terminal_args) - 1
     # Prints number of arguments to terminal
     print("{} arguments identified.\nDrugs are sorted by total cost.".format(num_args))
     # If three arguments, sets import and export paths
@@ -170,7 +170,7 @@ def import_data(import_path):
             # Splits by comma delimiter
             parsed_line = strip_line.split(",")
             # If True, data entry is file header
-            if "prescriber_last_name" in parsed_line[1].lower:
+            if "prescriber_last_name" in parsed_line[1].lower():
                 # Skips import of file header
                 continue
             # Checks quality of parsed entry

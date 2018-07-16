@@ -72,7 +72,7 @@ sys.tracebacklimit = None
 if __name__ == "__main__":
     ## START SCRIPT
     # Displays script header in terminal
-    print("Pharmacy Counting v1.0\n========================\n")
+    print("\nPharmacy Counting v1.0\n========================\n")
 
     ## IMPORT DATA
     # Retrives arguments from terminal
