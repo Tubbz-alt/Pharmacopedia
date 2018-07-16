@@ -76,7 +76,9 @@ def analyze_data(all_data):
         # Calculates total number of prescribers
         num_prescribers = sum([ 1 for prescriber in all_prescribers ])
         # Calculates prescriber net drug cost
-        prescriber_costs = [sum(all_data[drug][prescriber]) for prescriber in all_prescribers]
+        prescriber_costs = [
+            sum(all_data[drug][prescriber]) for prescriber in all_prescribers
+        ]
         # Calculate gross prescriber cost for given drug
         total_cost = sum(prescriber_costs)
         # Sets tuple of number of prescribers (index 0) and total cost (1)
@@ -84,12 +86,12 @@ def analyze_data(all_data):
     # Returns dictionary of analyzed data
     return processed_data
 
-def sort_drugs(processed_data, is_alpha_sort):
+def sort_drugs(processed_data, alpha_sort, **kwargs):
     """
     Sorts all drug names, as primary keys of processed data dictionary. Sorting
     is governed by primary criteria of decreasing cost, then secondary criteria
     of alphabetical order. Secondary criteria considers only alphanumeric
-    characters if "is_alpha_sort" is True, or both alphanumeric and special
+    characters if "alpha_sort" is True, or both alphanumeric and special
     characters if False. Requires sort_criteria() inner function.
 
     Args:
@@ -97,7 +99,7 @@ def sort_drugs(processed_data, is_alpha_sort):
             is drug name (string), and primary value is tuple containing
             number of prescribers (integer, index 0) and total cost (float,
             index 1).
-        is_alpha_sort (boolean): if True, special characters are not considered
+        alpha_sort (boolean): if True, special characters are not considered
             during sorting. If False, special characters are considered during
             sorting.
 
@@ -123,16 +125,18 @@ def sort_drugs(processed_data, is_alpha_sort):
         # Sets second criteria of alphanumeric drug name
         name_criteria = drug.upper()
         # If True, does not consider special characters in alphanumeric order
-        if is_alpha_sort:
-            # Removes one point blank space
-            name_criteria = name_criteria.replace(" ","")
-            # Removes hyphen character
-            name_criteria = name_criteria.replace("-","")
-            # Removes single quotation character
-            name_criteria = name_criteria.replace("\'","")
+        if alpha_sort:
+            # Iterates over all characters in drug name
+            for char in drug:
+                # If character is not in safe list, remove from name criteria
+                if char not in safe_char:
+                    # Removes special characters
+                    name_criteria = name_criteria.replace(char,"")
         # Returns primary and secondary sorting criteria
         return (cost_criteria, name_criteria)
 
+    # Sets safe characters for evaluation of name criteria
+    safe_char = kwargs['ch']
     # Sorts drug names by decreasing cost then alphanumeric order
     all_drugs_sorted = sorted(processed_data, key=sort_criteria)
     # Returns list of sorted drug names

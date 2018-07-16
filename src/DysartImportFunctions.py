@@ -39,10 +39,10 @@ SOFTWARE.
 """
 
 
-## REQUIRED MODULES
+## REQUIRED LIBRARIES
 
-# Checks file existence in input and export paths
-import os
+# Enables warning and error printing to terminal
+import DysartDebugFunctions as adb
 
 
 ## PRIMARY FUNCTIONS
@@ -58,7 +58,7 @@ def get_args(terminal_args):
     Returns:
         import_path (string): path to input file.
         export_path (string): path to output file.
-        is_alpha_sort (boolean): if True, sorting by alphanumeric characters
+        alpha_sort (boolean): if True, sorting by alphanumeric characters
             and ignores special characters.
 
     Raises:
@@ -67,20 +67,26 @@ def get_args(terminal_args):
     # Identifies number of arguments from terminal
     num_args = len(terminal_args) - 1
     # Prints number of arguments to terminal
-    print("{} arguments identified.\nDrugs are sorted by total cost.".format(num_args))
+    print(
+        "{} arguments identified.\nDrugs are sorted "
+        "by total cost.".format(num_args)
+    )
     # If three arguments, sets import and export paths
-    if num_args == 3:
+    if num_args == 2:
         # Sets import path
         import_path = terminal_args[1]
         # Sets export path
         export_path = terminal_args[2]
         # Sets secondary sorting method
-        is_alpha_sort = False
+        alpha_sort = False
         # Prints secondary sorting method to terminal
-        print("If necessary, drugs names are sorted according to alphanumeric and special characters.\n")
+        print(
+            "If necessary, drugs names are sorted "
+            "according to alphanumeric and special characters.\n"
+        )
     # If four arguments, sets import path, export path, and secondary sorting
     # method
-    elif num_args == 4:
+    elif num_args == 3:
         # Sets import path
         import_path = terminal_args[1]
         # Sets export path
@@ -89,52 +95,37 @@ def get_args(terminal_args):
         # consider special characters
         if terminal_args[3].lower() in ["true", "1", "t", "y", "yes", "alpha"]:
             # Sets secondary sorting method to only alphanumeric characters
-            is_alpha_sort = True
+            alpha_sort = True
             # Prints secondary sorting method to terminal
-            print("If necessary, drugs names are sorted according to alphanumeric characters only.\n")
+            print(
+                "If necessary, drugs names are sorted "
+                "according to alphanumeric characters only.\n"
+            )
         # Else, sets secondary sorting method to consider both alphanumeric
         # and special characters
         else:
             # Sets secondary sorting method to all characters
-            is_alpha_sort = False
+            alpha_sort = False
             # Prints secondary sorting method to terminal
-            print("If necessary, drugs names are sorted according to alphanumeric and special characters.\n")
+            print(
+                "If necessary, drugs names are sorted "
+                "according to alphanumeric and special characters.\n"
+            )
     # If not three or four arguments, raises index error
     else:
         # Raises error for incorrect number of arguments
-        raise IndexError("Incorrect argument specification. See instructions in \"Read Me\" then run again.")
+        raise IndexError(
+            "Incorrect argument specification. See "
+            "instructions in \"Read Me\" then run again."
+        )
     # Prints input path to terminal
     print("\nImport file:\t{}\n".format(import_path))
+    # Checks integrity of input and export paths
+    adb.check_paths(import_path, export_path)
     # Returns import path, export path, and secondary sorting method to script
-    return import_path, export_path, is_alpha_sort
+    return import_path, export_path, alpha_sort
 
-def check_paths(import_path, export_path):
-    """
-    Inspects for file errors in import and export paths.
-
-    Args:
-        import_path (string): path to input file.
-        export_path (string): path to output file.
-
-    Returns:
-        None.
-
-    Raises:
-        FileNotFoundError: file does not exist on input path.
-        FileExistsError: file exists on output path.
-    """
-    # If input file cannot be found, raises file error
-    if not os.path.isfile(import_path):
-        # Raises error for non-existent input file
-        raise FileNotFoundError("File not found in \"input\" directory.\nPlease confirm and run again.")
-    # If output file already exists, raises file error
-    if os.path.isfile(export_path):
-        # Raises error for existing output file
-        raise FileExistsError("File already exists in \"output\" directory.\nPlease back up, remove, and run again.")
-    # Completes quality check for import path and export path
-    return None
-
-def import_data(import_path):
+def import_data(import_path, warn=False, **kwargs):
     """
     Collects, parses, and organizes data from imported file. See "Read Me" for
     more information.
@@ -151,6 +142,9 @@ def import_data(import_path):
 
     Args:
         import_path (string): path to input file.
+        warn (boolean): if True, displays data entries with unsafe characters
+            to the user terminal as warning.
+        char (list of strings): contains all safe characters.
 
     Returns:
         all_data (nested dictionary): contains all collected, parsed, and
@@ -165,19 +159,19 @@ def import_data(import_path):
     with open(import_path, 'r') as target_file:
         # Iterates over all data entries or lines
         for line in target_file:
-            # Removes line breaks
-            strip_line = line.strip("\n")
-            # Splits by comma delimiter
-            parsed_line = strip_line.split(",")
+            parsed_line = parse_line_custom(line)
             # If True, data entry is file header
             if "prescriber_last_name" in parsed_line[1].lower():
                 # Skips import of file header
                 continue
-            # Checks quality of parsed entry
-            parse_check(parsed_line)
-            # Sets prescriber last name (index 1) and first name (2),
-            # drug name (3), and drug cost (4)
-            prescriber_id, last_name, first_name, drug_name, drug_cost = parsed_line 
+            # If True, prints data entries with unsafe characters to terminal
+            if warn:
+                # Warns for data entries with unsafe characters 
+                adb.parse_warn(*parsed_line, line=line, ch=kwargs['ch'])
+            # Sets prescriber id (index 0), last name (1), and first name (2)
+            prescriber_id, last_name, first_name = parsed_line[:3]
+            # Sets drug name (index 3) and drug cost (4)
+            drug_name, drug_cost = parsed_line[-2:]
             # Sets tuple of prescriber full name
             prescriber_name = (last_name, first_name)
             # If drug does not exist in dictionary, adds new drug name
@@ -194,72 +188,78 @@ def import_data(import_path):
     # drug name (2* key), and drug cost (2* value) to script
     return all_data
 
-
-## SECONDARY FUNCTIONS
-
-def parse_check(parsed_line):
+def parse_line_custom(line):
     """
-    Investigates imported data integrity. Required by import_data() function.
-    Requires alpha_only() and numbers_only() functions.
+    Separates and splits data entry line based on comma delimiters and the
+    presence of double-quation marks. In the test data, double-quotation marks
+    represent entry elements which contain a non-delimiting comma. After
+    nondiscriminatory comma delimiting, over-delimited elements are 
+    reconstructed according to the appearance of double-quotation marks.
 
     Args:
-        parsed_line (list of strings): contains strings parsed from data entry.
+        line (string): single string of raw data from entry import.
 
     Returns:
-        None.
+        parsed_line (list of strings): contains correctly parsed line entry.
     """
-    # If parsed entry does not have 5 elements, raises index error
-    if len(parsed_line) != 5:
-        # Raises error for more than 5 entry elements
-        raise IndexError("Entry {} split incorrectly with {} elements.\nCheck then run again.".format(parsed_line[0], len(parsed_line)))
-    # If prescriber ID has alphabetic characters, raises type error
-    if not numbers_only(parsed_line[0]):
-        #  Raises error that prescriber ID has alphabetic characters
-        raise TypeError("Entry {} has prescriber ID which contains alphabetical characters.\nCheck then run again.".format(parsed_line[0]))
-    # If prescriber last name has numeric characters, raises type error
-    if not alpha_only(parsed_line[1]):
-        #  Raises error that prescriber last name has numeric characters
-        raise TypeError("Entry {} has prescriber last name \"{}\" which contains numerical characters.\nCheck then run again.".format(parsed_line[0], parsed_line[1]))
-    # If prescriber first name has numeric characters, raises type errror
-    if not alpha_only(parsed_line[2]):
-        # Raises error that prescriber first name has numeric characters
-        raise TypeError("Entry {} has prescriber first name \"{}\" which contains non-numeric characters.\nCheck then run again.".format(parsed_line[0], parsed_line[2]))
-    # If drug cost has alphabetic characters, raises type error
-    if not numbers_only(parsed_line[4]):
-        # Raises error that drug cost has alphabetic characters
-        raise TypeError("Entry {} has cost \"{}\" which contains non-numeric charaacters.\nCheck then run again.".format(parsed_line[0], parsed_line[4]))
-    # Completes quality check for parsed data entry
-    return None
-
-def alpha_only(target_string):
-    """
-    Returns True if string contains all alphabetic and no numeric characters.
-    Does not consider special characters. Checks quality of parsed prescriber
-    first and last names.
-
-    Args:
-        target_string (string): string checked for alphabetic characters.
-
-    Returns:
-        (boolean): if True, only alphabetic or special characters in string.
-    """
-    # Returns True if string contains only alphabetic characters
-    return all(char.isalpha() for char in target_string if char not in [".","\'"," ","-"])
-
-def numbers_only(target_string):
-    """
-    Returns True if string contains all numeric and no alphabetic characters.
-    Does not consider special characters. Checks quality of parsed
-    prescriber ID and drug cost.
-
-    Args:
-        target_string (string): string checked for numeric characters.
-
-    Returns:
-        True (boolean): if only numeric or special characters in string.
-    """
-    # Returns True if string contains ony numeric characters
-    return all(char.isdigit() for char in target_string if char not in [".","\'"," ","-"])
+    # Removes end line break
+    line = line.replace("\n", "")
+    # Splits line first by comma delimiter
+    comma_split = line.split(",")
+    # Counts number of double-quotation mark characters
+    num_quotes = line.count("\"")
+    # If number of double-quotation mark characters is not even, raise warning
+    if num_quotes % 2 != 0:
+        # Raises warning for uneven number of double-quotation mark characters
+        # suggesting unpaired quotation mark
+        adb.parse_warn_quotes(comma_split[0])
+    # If no double-quotation mark characters, splits line by comma delimiter
+    if num_quotes == 0:
+        # Splits line by comma delimiter only
+        parsed_line = comma_split
+    # If more than one double-quotation mark character, splits line according
+    # to comma delimiter; when commas are enclosed by double-quotation mark
+    # characters, merges enclosed comma-separated elements into single element
+    else:
+        # Sets length of comma-separated line vector
+        index_range = range(0, len(comma_split))
+        # Collects indicies of comma-separated line vector that contain only
+        # one double-quotation mark character
+        quote_indices = [
+            i for i in index_range if comma_split[i].count("\"") == 1
+        ]
+        # Sets number of double-quotation mark pairs
+        num_quotes = range(0, len(quote_indices) // 2)
+        # Collects all indicies with opening double-quotation mark characters
+        open_quotes = quote_indices[0::2]
+        # Collects all indicies with closing double-quotation mark characters
+        close_quotes = quote_indices[1::2]
+        # Pairs indicies with double-quotation mark characters according to
+        # opening and closing positions
+        quote_pairs = [(open_quotes[j], close_quotes[j]+1) for j in num_quotes]
+        # Iterates over quote pairs in reverse order to perform reconstruction
+        for p in reversed(quote_pairs):
+            # Initalizes collection for reconstruction pieces
+            line_parts = []
+            # Sets index range for reconstruction
+            cut_range = range(p[0], p[1])
+            # Iterates over reconstruction range in reverse order
+            for k in reversed(cut_range):
+                # Removes specified element from comma-delimited list 
+                cut_part = comma_split.pop(k)
+                # Saves removed element into reconstruction list
+                line_parts.append(cut_part)
+            # Reverses elements of inverted reconstruction list
+            reverse_recon = list(reversed(line_parts))
+            # Concatenates collected parts for reconstruction
+            fixed_split = ",".join(reverse_recon)
+            # Inserts reconstructed part into original position in the comma-
+            # delimited list
+            comma_split.insert(p[0], fixed_split)
+        # Sets final line split as reconstructed comma-delimited split
+        parsed_line = comma_split
+    # Returns final split 
+    return parsed_line
 
 
 ## MODULE METADATA

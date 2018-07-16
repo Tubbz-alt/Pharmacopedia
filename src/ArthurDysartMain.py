@@ -65,6 +65,13 @@ import DysartExportFunctions as ad3
 terminal_args = sys.argv
 # Sets traceback errors to off
 sys.tracebacklimit = None
+# Sets safe characters during parse check
+safe_char = [
+    "A","B","C","D","E","F","G","H","I","J","K","L","M",
+    "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+    "0","1","2","3","4","5","6","7","8","9",
+    " ","-",".","%","&","/","(",")",",","#","\"","\'","\\",
+]
 
 
 ## MAIN MODULE
@@ -72,23 +79,24 @@ sys.tracebacklimit = None
 if __name__ == "__main__":
     ## START SCRIPT
     # Displays script header in terminal
-    print("\nPharmacy Counting v1.0\n========================\n")
+    print(
+        "\nPharmacy Counting v1.0\n"
+        "========================\n"
+    )
 
     ## IMPORT DATA
-    # Retrives arguments from terminal
-    import_path, export_path, is_alpha_sort = ad1.get_args(terminal_args)
-    # Evaluates accuracy of import and export paths
-    ad1.check_paths(import_path, export_path)
+    # Retrives and checks arguments from terminal
+    import_path, export_path, alpha_sort = ad1.get_args(terminal_args)
     # Organizes data in nested dictionary according to drug (1* key),
     # prescriber (2* key), and cost (2* value)
-    all_data = ad1.import_data(import_path)
+    all_data = ad1.import_data(import_path, warn=True, ch=safe_char)
 
     ## ANALYZE DATA
     # Calculates prescriber count (index 0) and cost (index 1) for each drug
     processed_data = ad2.analyze_data(all_data)
     # Sorts drugs by decreasing cost and alphanumeric order
-    all_drugs_sorted = ad2.sort_drugs(processed_data, is_alpha_sort)
-    
+    all_drugs_sorted = ad2.sort_drugs(processed_data, alpha_sort, ch=safe_char)
+
     ## EXPORT DATA
     # Writes ordered data to new file at export path
     ad3.export_data(processed_data, all_drugs_sorted, export_path)
