@@ -1,212 +1,277 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jul 15 16:49:30 2018
+Pharmacy Counting.Py
 
-@author: arthur
+DESCRIPTION
+
+Analyzes and organizes medical pharmacy data. Using data from the Centers for
+Medicare & Medicaid Services, this script calculates: (1) total number of
+prescribers and (2) total prescriber expenditure for all listed drugs. Exports
+analyzed data to text file with drugs organized by decreasing cost and, where
+required, alphanumeric order. Created on 13:34:50 Wednesday, July 11, 2018.
+
+Ths module contains functions required for import of raw medical pharmacy data.
+
+Script metadata available at end of module.
+
+
+MIT LICENSE
+
+Copyright (c) 2018 Arthur D. Dysart
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 """
 
 
+## REQUIRED MODULES
 
-""" REQUIRED MODULES """
-# Check input and ouput paths from terminal arguments
+# Checks file existence in input and export paths
 import os
 
 
-""" FUNCTION DEFINITIONS """
-
+## PRIMARY FUNCTIONS
 
 def get_args(terminal_args):
     """
-    Interprets terminal arguments as import path, export path, and sorting method.
+    Interprets terminal arguments as import path, export path, and sorting
+    method.
 
     Args:
-        terminal_args (list of strings): From sys, contains terminal input.
+        terminal_args (list of strings): List of terminal arguments.
 
     Returns:
         import_path (string): path to input file.
         export_path (string): path to output file.
-        is_alpha_sort (boolean): True if will sort by alphabetical characters only.
+        is_alpha_sort (boolean): if True, sorting by alphanumeric characters
+            and ignores special characters.
 
     Raises:
-        OSError: number of terminal arguments are unknown.
+        IndexError: number of terminal arguments are unknown.
     """
-    # Identify number of arguments in terminal
+    # Identifies number of arguments from terminal
     num_args = len(terminal_args)
-    print("{} arguments identified.\n".format(num_args))
-    print( "Drugs are sorted by total cost." )
-    # Check if two arguments specified in terminal
+    # Prints number of arguments to terminal
+    print("{} arguments identified.\nDrugs are sorted by total cost.".format(num_args))
+    # If three arguments, sets import and export paths
     if num_args == 3:
-        # Initialze "import_path"
+        # Sets import path
         import_path = terminal_args[1]
-        # Initialze "export_path"
+        # Sets export path
         export_path = terminal_args[2]
-        # Initialize "is_alpha_sort"
+        # Sets secondary sorting method
         is_alpha_sort = False
-        # Print acknowledgement in terminal
-        print( "If necessary, drugs names are sorted according to all characters.\n" )
-    # Check if three arguments specified in terminal
+        # Prints secondary sorting method to terminal
+        print("If necessary, drugs names are sorted according to alphanumeric and special characters.\n")
+    # If four arguments, sets import path, export path, and secondary sorting
+    # method
     elif num_args == 4:
-        # Initialze "import_path"
+        # Sets import path
         import_path = terminal_args[1]
-        # Initialze "export_path"
+        # Sets export path
         export_path = terminal_args[2]
-        # Check "is_alpha_sort"
+        # If fourth argument matches, sets secondary sorting method to not
+        # consider special characters
         if terminal_args[3].lower() in ["true", "1", "t", "y", "yes", "alpha"]:
-            # Drug names will be sorted by alphanumeric characters only
+            # Sets secondary sorting method to only alphanumeric characters
             is_alpha_sort = True
-            # Print acknowledgement in terminal
-            print( "If necessary, drugs names are sorted according to alphanumeric characters only.\n" )
-        # No matched "is_alpha_sort"
+            # Prints secondary sorting method to terminal
+            print("If necessary, drugs names are sorted according to alphanumeric characters only.\n")
+        # Else, sets secondary sorting method to consider both alphanumeric
+        # and special characters
         else:
-            # Drug names will be sorted by alphanumeric and other characters
+            # Sets secondary sorting method to all characters
             is_alpha_sort = False
-            # Print acknowledgement in terminal
-            print( "If necessary, drugs names are sorted according to all characters.\n" )
-
-    # Unknown arguments from terminal
+            # Prints secondary sorting method to terminal
+            print("If necessary, drugs names are sorted according to alphanumeric and special characters.\n")
+    # If not three or four arguments, raises index error
     else:
-        raise OSError("Incorrect terminal specification. See \"Read Me\" for instructions then run again.")
-
-    # Display input path in terminal
+        # Raises error for incorrect number of arguments
+        raise IndexError("Incorrect argument specification. See instructions in \"Read Me\" then run again.")
+    # Prints input path to terminal
     print("\nImport file:\t{}\n".format(import_path))
-    # Deliver values required from terminal input
+    # Returns import path, export path, and secondary sorting method to script
     return import_path, export_path, is_alpha_sort
-
 
 def check_paths(import_path, export_path):
     """
-    Inspect quality of target path, then return target path on passed inspection.
+    Inspects for file errors in import and export paths.
 
     Args:
-        is_input_path (boolean): determines path integrity check to perform.
+        import_path (string): path to input file.
+        export_path (string): path to output file.
 
     Returns:
-        None
+        None.
 
     Raises:
-        OSError: input path length is too long or input file not found.
-        OSError: output path length is too long or output file exists.
+        FileNotFoundError: file does not exist on input path.
+        FileExistsError: file exists on output path.
     """
-    # For input file, ensure path exists
+    # If input file cannot be found, raises file error
     if not os.path.isfile(import_path):
-        raise OSError("Input file not found in \"input\" directory.\nPlease confirm run and again.")
-
-    # For output file, ensure path does not exist
+        # Raises error for non-existent input file
+        raise FileNotFoundError("File not found in \"input\" directory.\nPlease confirm and run again.")
+    # If output file already exists, raises file error
     if os.path.isfile(export_path):
-        raise OSError("Output file already exists in \"output\" directory.\nPlease back up, remove, and run again.")
-
-    ## Import and export paths pass integrity test
+        # Raises error for existing output file
+        raise FileExistsError("File already exists in \"output\" directory.\nPlease back up, remove, and run again.")
+    # Completes quality check for import path and export path
     return None
-
 
 def import_data(import_path):
     """
-    Import input file as strings. Wraps "parse_check" function.
+    Collects, parses, and organizes data from imported file. See "Read Me" for
+    more information.
+    
+    For each data
+    entry or line, removes new line character and splits raw string according
+    to comma delimiter. If "prescriber_last_name" is index 1 element, entry
+    is identified as header row and skipped. Parsed entries are checked for
+    incorrect parsing using the parse_check() function. Parsed data entries
+    are assigned aliases. Collected data is stored in nested dictionary.
+    Prescriber first and last name are stored as tuple and implemented as
+    dictionary key for corresponding drug cost. Primary key is drug name,
+    secondary key is prescriber name.
 
     Args:
-        import_path (string): path of input file with source data.
+        import_path (string): path to input file.
 
     Returns:
-        all_data (dictionary): dictionary containing all read and parsed data.
+        all_data (nested dictionary): contains all collected, parsed, and
+            organized data. Primary key is drug name (string), and primary
+            value is sub-dictionary of prescribers (tuple of strings).
+            Secondary key is prescriber name (string) and secondary value is
+            drug cost (list of floats).
     """
-    # Initialize dictionary for imported data
+    # Sets empty dictionary for import data
     all_data = {}
-    # Safely open and close text file
+    # Safely opens and closes file for reading
     with open(import_path, 'r') as target_file:
-        # Iterate over whole file
+        # Iterates over all data entries or lines
         for line in target_file:
-
-            # Remove line break character
+            # Removes line breaks
             strip_line = line.strip("\n")
-            # Split string by delimiter ","
+            # Splits by comma delimiter
             parsed_line = strip_line.split(",")
-            # Check for header line
-            if "id" in parsed_line[0]:
-                # Skip header line
+            # If True, data entry is file header
+            if "prescriber_last_name" in parsed_line[1].lower:
+                # Skips import of file header
                 continue
-            # Check integrity of parsed line
+            # Checks quality of parsed entry
             parse_check(parsed_line)
-
-            # Assign elements of parsed line
-            _id, last_name, first_name, drug_name, drug_cost = parsed_line
-            # Assign tuple for patient identification
-            patient_name = ( last_name, first_name )
-            # Check if drug exists in dictionary; If not, add drug to dictionary
+            # Sets prescriber last name (index 1) and first name (2),
+            # drug name (3), and drug cost (4)
+            prescriber_id, last_name, first_name, drug_name, drug_cost = parsed_line 
+            # Sets tuple of prescriber full name
+            prescriber_name = (last_name, first_name)
+            # If drug does not exist in dictionary, adds new drug name
             if drug_name not in all_data:
-                # For each new drug, initialize patient sub-dictionary
+                # For each new drug, creates initial prescriber sub-dictionary
                  all_data[drug_name] = {}
-            # Check if drug already purchased by patient; If not, add to drug's patient dictionary
-            if patient_name not in all_data[drug_name]:
-                # For each new patient for this drug, initialize list of purchases
-                all_data[drug_name][patient_name] = []
-            # Add cost to this patient's list of drug purchases
-            all_data[drug_name][patient_name].append(float(drug_cost))
-
-    # Deliver dictionary of patient name (1* key), drug name (1* value, 2* key), and cost (2* value)
+            # If prescriber is not assigned to drug, adds known prescriber
+            if prescriber_name not in all_data[drug_name]:
+                # For each new prescriber, creates initial cost list
+                all_data[drug_name][prescriber_name] = []
+            # Adds cost to drug's known prescribers
+            all_data[drug_name][prescriber_name].append(float(drug_cost))
+    # Returns all data as nested dictionary with prescriber name (1* key),
+    # drug name (2* key), and drug cost (2* value) to script
     return all_data
 
 
-"""
-SUPPORTING FUNCTIONS
-"""
+## SECONDARY FUNCTIONS
 
 def parse_check(parsed_line):
     """
-    Investigate integrity of imported data. Wrapped by "import_data" function.
+    Investigates imported data integrity. Required by import_data() function.
+    Requires alpha_only() and numbers_only() functions.
 
     Args:
-        parsed_line (list): List of parsed data to be investigated.
+        parsed_line (list of strings): contains strings parsed from data entry.
 
     Returns:
-        None
+        None.
     """
-    # Determine if correct parsing of data entry
+    # If parsed entry does not have 5 elements, raises index error
     if len(parsed_line) != 5:
-        # Data entry contains more than 5 elements
+        # Raises error for more than 5 entry elements
         raise IndexError("Entry {} split incorrectly with {} elements.\nCheck then run again.".format(parsed_line[0], len(parsed_line)))
-    # Determine if entry ID contains only numeric characters
+    # If prescriber ID has alphabetic characters, raises type error
     if not numbers_only(parsed_line[0]):
-        # Entry ID contains alphabetical characters
-        raise TypeError("Entry {} has ID which contains non-numeric characters.\nCheck then run again.".format(parsed_line[0]))
-    # Determine if user last name contains only alphabetical characters
+        #  Raises error that prescriber ID has alphabetic characters
+        raise TypeError("Entry {} has prescriber ID which contains alphabetical characters.\nCheck then run again.".format(parsed_line[0]))
+    # If prescriber last name has numeric characters, raises type error
     if not alpha_only(parsed_line[1]):
-        # Prescriber last name contains numeric characters
-        raise TypeError("Entry {} has prescriber last name \"{}\" which contains non-alpha characters.\nCheck then run again.".format(parsed_line[0], parsed_line[1]))
-    # Determine if user first name contains only alphabetical characters
+        #  Raises error that prescriber last name has numeric characters
+        raise TypeError("Entry {} has prescriber last name \"{}\" which contains numerical characters.\nCheck then run again.".format(parsed_line[0], parsed_line[1]))
+    # If prescriber first name has numeric characters, raises type errror
     if not alpha_only(parsed_line[2]):
-        # Prescriber first name contains alphabetical characters
+        # Raises error that prescriber first name has numeric characters
         raise TypeError("Entry {} has prescriber first name \"{}\" which contains non-numeric characters.\nCheck then run again.".format(parsed_line[0], parsed_line[2]))
-    # Determine if drug cost contains only numeric characters
+    # If drug cost has alphabetic characters, raises type error
     if not numbers_only(parsed_line[4]):
-        # Drug cost contains alphabetical characters
+        # Raises error that drug cost has alphabetic characters
         raise TypeError("Entry {} has cost \"{}\" which contains non-numeric charaacters.\nCheck then run again.".format(parsed_line[0], parsed_line[4]))
-    # Data entry passes integrity test
+    # Completes quality check for parsed data entry
     return None
-
 
 def alpha_only(target_string):
     """
-    Investigate integrity of entry from imported data.
+    Returns True if string contains all alphabetic and no numeric characters.
+    Does not consider special characters. Checks quality of parsed prescriber
+    first and last names.
 
     Args:
-        target_string (string): input string to be checked for numeric characters.
+        target_string (string): string checked for alphabetic characters.
 
     Returns:
-        (boolean): True if numeric characters found in name strings.
+        (boolean): if True, only alphabetic or special characters in string.
     """
-    # Check for non-alphabetical characters in given string
-    return all( char.isalpha() for char in target_string if char not in [".","\'"," ","-"] )
-
+    # Returns True if string contains only alphabetic characters
+    return all(char.isalpha() for char in target_string if char not in [".","\'"," ","-"])
 
 def numbers_only(target_string):
     """
-    Investigate integrity of entry from imported data.
+    Returns True if string contains all numeric and no alphabetic characters.
+    Does not consider special characters. Checks quality of parsed
+    prescriber ID and drug cost.
 
     Args:
-        target_string (string): input string to be checked for numeric characters.
+        target_string (string): string checked for numeric characters.
 
     Returns:
-        (boolean): True if numeric or "." characters found in name strings.
+        True (boolean): if only numeric or special characters in string.
     """
-    # Check for non-alphabetical characters in given string
-    return all( char.isdigit() for char in target_string if char not in [".","\'"," ","-"] )
+    # Returns True if string contains ony numeric characters
+    return all(char.isdigit() for char in target_string if char not in [".","\'"," ","-"])
+
+
+## MODULE METADATA
+
+__author__ = 'Arthur D. Dysart'
+__copyright__ = 'Copyright 2018, Pharmacy Counting'
+__credits__ = ['Arthur D. Dysart']
+__license__ = 'MIT License'
+__version__ = '0.0.5'
+__maintainer__ = 'Arthur D. Dysart'
+__email__ = 'hi@arthurdys.art'
+__status__ = 'closed'
+
+
+## END OF MODULE

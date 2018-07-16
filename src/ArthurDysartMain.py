@@ -1,60 +1,115 @@
 # -*- coding: utf-8 -*-
 """
-Date:   Wed Jul 11 13:34:50 2018
+Pharmacy Counting.Py
+
+DESCRIPTION
+
+Analyzes and organizes medical pharmacy data. Using data from the Centers for
+Medicare & Medicaid Services, this script calculates: (1) total number of
+prescribers and (2) total prescriber expenditure for all listed drugs. Exports
+analyzed data to text file with drugs organized by decreasing cost and, where
+required, alphanumeric order. Created on 13:34:50 Wednesday, July 11, 2018.
+
+Ths module is the primary module which handles import, analysis, and export
+of medical pharmacy data.
+
+Script metadata available at end of module.
+
+
+MIT LICENSE
+
+Copyright (c) 2018 Arthur D. Dysart
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 """
 
 
-""" REQUIRED MODULES """
-# Retrive arguments from "run.sh" shell script
+## REQUIRED MODULES
+
+# Retrives arguments from shell script
 import sys
 
 
-""" FUNCTION DEFINITIONS """
-# Fnctions for data import from:    "./src/DysartImportFunctions.py"
+## REQUIRED LIBRARIES
+
+# Retrives functions for data import
+# Source: ./src/DysartImportFunctions.py
 import DysartImportFunctions as ad1
-# Functions for data analysis from:    "./src/DysartAnalysisFunctions.py"
+# Retrives functions for data analysis
+# Source: ./src/DysartAnalysisFunctions.py
 import DysartAnalysisFunctions as ad2
-# Functions for data export from:    "./src/DysartExportFunctions.py"
+# Retrives functions for data export
+# Source: ./src/DysartExportFunctions.py
 import DysartExportFunctions as ad3
 
 
-""" VARIABLE DEFINITIONS """
-# Get input variables from terminal
+## PARAMETER DEFINITIONS
+
+# Retrieves input variables from terminal
 terminal_args = sys.argv
-# Set traceback errors off
+# Sets traceback errors to off
 sys.tracebacklimit = None
 
 
-""" MAIN MODULE """
+## MAIN MODULE
+
 if __name__ == "__main__":
     ## START SCRIPT
-    # Display script header text in terminal
+    # Displays script header in terminal
     print("Pharmacy Counting v1.0\n========================\n")
 
     ## IMPORT DATA
-    # Get script arguments from terminal
+    # Retrives arguments from terminal
     import_path, export_path, is_alpha_sort = ad1.get_args(terminal_args)
-    # Check import and export paths
+    # Evaluates accuracy of import and export paths
     ad1.check_paths(import_path, export_path)
-    # Parse and organize data by drug (1* key), prescriber (1* value, 2* key), then cost (2* value)
+    # Organizes data in nested dictionary according to drug (1* key),
+    # prescriber (2* key), and cost (2* value)
     all_data = ad1.import_data(import_path)
 
     ## ANALYZE DATA
-    # For each drug (1* key), prepare list with number of prescribers (index 0) and cost (index 1)
+    # Calculates prescriber count (index 0) and cost (index 1) for each drug
     processed_data = ad2.analyze_data(all_data)
-    # Sort all drug names by 1: decreasing cost, then 2: drug name
+    # Sorts drugs by decreasing cost and alphanumeric order
     all_drugs_sorted = ad2.sort_drugs(processed_data, is_alpha_sort)
     
     ## EXPORT DATA
-    # Save data in srted order to new text file at export path
+    # Writes ordered data to new file at export path
     ad3.export_data(processed_data, all_drugs_sorted, export_path)
 
     ## END SCRIPT
-    # Display finalization text in terminal
+    # Displays script footer in terminal
     print("\nPharmacy counting complete.\n")
-    # Display output file path
+    # Displays file export path
     print("Export file:\t{}\n".format(export_path))
 
 
-""" END OF MODULE """
+## MODULE METADATA
 
+__author__ = 'Arthur D. Dysart'
+__copyright__ = 'Copyright 2018, Pharmacy Counting'
+__credits__ = ['Arthur D. Dysart']
+__license__ = 'MIT License'
+__version__ = '0.0.5'
+__maintainer__ = 'Arthur D. Dysart'
+__email__ = 'hi@arthurdys.art'
+__status__ = 'closed'
+
+
+## END OF MODULE
