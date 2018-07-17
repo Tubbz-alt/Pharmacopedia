@@ -1,103 +1,3 @@
-If your input data, **`itcont.txt`**, is
-```
-id,prescriber_last_name,prescriber_first_name,drug_name,drug_cost
-1000000001,Smith,James,AMBIEN,100
-1000000002,Garcia,Maria,AMBIEN,200
-1000000003,Johnson,James,CHLORPROMAZINE,1000
-1000000004,Rodriguez,Maria,CHLORPROMAZINE,2000
-1000000005,Smith,David,BENZTROPINE MESYLATE,1500
-```
-
-then your output file, **`top_cost_drug.txt`**, would contain the following lines
-```
-drug_name,num_prescriber,total_cost
-CHLORPROMAZINE,2,3000
-BENZTROPINE MESYLATE,1,1500
-AMBIEN,2,300
-```
-
-These files are provided in the `insight_testsuite/tests/test_1/input` and `insight_testsuite/tests/test_1/output` folders, respectively.
-
-
-# Tips on getting an interview
-
-## Writing clean, scalable and well-tested code
-
-As a data engineer, it’s important that you write clean, well-documented code that scales for a large amount of data. For this reason, it’s important to ensure that your solution works well for a large number of records, rather than just the above example.
-
-<a href="https://drive.google.com/file/d/1fxtTLR_Z5fTO-Y91BnKOQd6J0VC9gPO3/view?usp=sharing">Here</a> you can find a large dataset containing over 24 million records. Note, we will use it to test the full functionality of your code, along with other tests.
-
-It's also important to use software engineering best practices like unit tests, especially since data is not always clean and predictable.
-
-Before submitting your solution you should summarize your approach and run instructions (if any) in your `README`.
-
-You may write your solution in any mainstream programming language, such as C, C++, C#, Go, Java, Python, Ruby, or Scala. Once completed, submit a link of your Github or Bitbucket repo with your source code.
-
-In addition to the source code, the top-most directory of your repo must include the `input` and `output` directories, and a shell script named `run.sh` that compiles and runs the program(s) that implement(s) the required features.
-
-If your solution requires additional libraries, environments, or dependencies, you must specify these in your `README` documentation. See the figure below for the required structure of the top-most directory in your repo, or simply clone this repo.
-
-## Repo directory structure
-
-The directory structure for your repo should look like this:
-
-    ├── README.md 
-    ├── run.sh
-    ├── src
-    │   └── pharmacy-counting.py
-    ├── input
-    │   └── itcont.txt
-    ├── output
-    |   └── top_cost_drug.txt
-    ├── insight_testsuite
-        └── run_tests.sh
-        └── tests
-            └── test_1
-            |   ├── input
-            |   │   └── itcont.txt
-            |   |__ output
-            |   │   └── top_cost_drug.txt
-            ├── your-own-test_1
-                ├── input
-                │   └── your-own-input-for-itcont.txt
-                |── output
-                    └── top_cost_drug.txt
-
-**Don't fork this repo** and don't use this `README` instead of your own. The content of `src` does not need to be a single file called `pharmacy-counting.py`, which is only an example. Instead, you should include your own source files and give them expressive names.
-
-## Testing your directory structure and output format
-
-To make sure that your code has the correct directory structure and the format of the output files are correct, we have included a test script called `run_tests.sh` in the `insight_testsuite` folder.
-
-The tests are stored simply as text files under the `insight_testsuite/tests` folder. Each test should have a separate folder with an `input` folder for `itcont.txt` and an `output` folder for `top_cost_drug.txt`.
-
-You can run the test with the following command from within the `insight_testsuite` folder:
-
-    insight_testsuite~$ ./run_tests.sh 
-
-On a failed test, the output of `run_tests.sh` should look like:
-
-    [FAIL]: test_1
-    [Thu Mar 30 16:28:01 PDT 2017] 0 of 1 tests passed
-
-On success:
-
-    [PASS]: test_1
-    [Thu Mar 30 16:25:57 PDT 2017] 1 of 1 tests passed
-
-
-
-One test has been provided as a way to check your formatting and simulate how we will be running tests when you submit your solution. We urge you to write your own additional tests. `test_1` is only intended to alert you if the directory structure or the output for this test is incorrect.
-
-Your submission must pass at least the provided test in order to pass the coding challenge.
-
-For a limited time we also are making available a <a href="http://ec2-18-210-131-67.compute-1.amazonaws.com/test-my-repo-link">website</a>
-
-
- 
- 
- 
- 
 Pharmacopedia: The medical prescription database
 
 Navigation
@@ -109,9 +9,9 @@ Navigation
 
 Pharmacopedia.Py (PharmaPy) enables online pharmacies to catalog prescriptions and analyze medical data. PharmaPy is compatible with comma-delimited text data from the Centers for Medicare & Medicaid Services. For each unique drug in its database, PharmaPy reports total drug cost and number of unique prescribers. Analysis reports are organized by drug name in sequence of decreasing total cost and alphanumeric order.
 
-PharmaPy is built on Python 3.6 and requires the `OS`, `SYS`, and `Warning` modules.
-
 # Quick start guide
+
+PharmaPy is built on Python 3.6 and requires the `os`, `sys`, and `warning` modules.
 
 ## Installation and setup
 Download Github repository. Install Python version 3.6 and Git Bash; ensure Python and Bash are available on the OS system path. Put the input data file in the `input/` directory. Note PharmaPy only analyzes comma-delimited plaintext data which follow formatting guidelines of the Centers for Medicare & Medicaid Services.
@@ -122,14 +22,15 @@ PharmaPy analysis is executed using command line or shell script.
 ## Command line interface
 Execute the following command:
 
-python3	[main path]	[import path]	[export path] [optional: sorting method]
+```
+python3    [main path]    [import path]    [export path]    [sorting option]
+```
 
-
-**`python3`** indicates script execution using Python 3 interpreter.
-**`main path`** indicates main script location. From the “home” directory, the main path is `./src/Pharmacopedia.Py`.
-**`import path`** indicates input file location. Using sample data, the import path is `./input/itcont.txt`.
-**`export path`** indicates output file location. Using sample data, the export path is `./output/top_cost_drug.txt`.
-**`sorting method`** indicates handling of non-alphanumerics in the sorting method. By default, non-alphanumerics in drug names are not ignored during sorting.
+- **`python3`** indicates script execution using Python 3 interpreter.
+- **`main path`** indicates main script location. From the home directory, the main path is `./src/Pharmacopedia.Py`.
+- **`import path`** indicates input file location. Using sample data, the import path is `./input/itcont.txt`.
+- **`export path`** indicates output file location. Using sample data, the export path is `./output/top_cost_drug.txt`.
+- **`sorting method`** indicates handling of non-alphanumerics in the sorting method. By default, non-alphanumerics in drug names are not ignored during sorting.
 
 PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. During analysis, the terminal displays data entries containing unrecognized or questionable non-alphanumeric characters. After analysis, the terminal displays the export path and ends the script. 
 
@@ -168,7 +69,7 @@ KEY-MODIFIED SORTING. PharmaPy handles sorting by
  
 
 # Requirements
-PharmaPy requires Python 3.6 and the `OS`, `SYS`, and `Warning` modules. The script can be executed via Bash shell script or command line interface.
+PharmaPy requires Python 3.6 and the `os`, `sys`, and `warning` modules. The script can be executed via Bash shell script or command line interface.
 
 The design of this script makes the following assumptions:
 - Drug name should appear and be sorted exactly as shown in input data set
@@ -183,5 +84,5 @@ Pharmacopedia is a portmanteau of “pharmacopoeia,” a repository for pharmace
 During development, sample data was obtained from the Centers for Medicare & Medicaid Services. The pre-cleaned data includes medical physician names, unique identification numbers, prescribed drugs, and total drug cost.
 
 # References
-https://stackoverflow.com/questions/11456850
-https://stackoverflow.com/questions/25501622
+- <a href="https://stackoverflow.com/questions/11456850">https://stackoverflow.com/questions/11456850</a>
+- <a href="https://stackoverflow.com/questions/25501622">https://stackoverflow.com/questions/25501622</a>
