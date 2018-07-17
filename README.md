@@ -32,7 +32,7 @@ python3    [main path]    [import path]    [export path]    [sorting option]
 - **`export path`** indicates output file location. Using sample data, the export path is `./output/top_cost_drug.txt`.
 - **`sorting option`** indicates handling of non-alphanumerics in sorting method. By default, it is set as `False`: non-alphanumerics in drug names are taken into account during sorting.
 
-PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. During analysis, the terminal displays data entries containing non-alphanumeric ***unrecognized or unapproved characters***. After analysis, the terminal displays the export path and ends the script. 
+PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. After analysis, the terminal displays the export path and ends the script. 
 
 ![Pharmacopedia can be executed via command line](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/cli_0.png)
 
@@ -44,7 +44,7 @@ Ensure source file exists in `input/` directory, and target file does not exist 
 To analyze custom data, update import and export paths in `run.sh` using a text editor. Ensure data is comma-delimited plaintext and follows formatting guidelines of the Centers for Medicare & Medicaid Services. The shell script can also be executed in command line with command `bash run.sh` while in the home directory.
 
 ## Additional settings
-In the advanced settings section of the `src/Pharmacopedia.py` main module, performance and behaviors can be controlled. Data warnings can be turned off by setting **`warning_display`** Boolean variable to `False`. The ***`cost_usd`*** setting controls precision of total drug cost: if 'True', final costs are rounded to nearest dollar instead of cent. The accepted alphanumeric, special, and escape characters – that is, characters that do not trigger data warning during parsing – can be modified by adding or removing characters to the **`safe_char`** list. Note that during drug sorting, all alphabetic characters are considered as their uppercase equivalents.
+In the advanced settings section of the `src/Pharmacopedia.py` main module, performance and behaviors can be controlled. During analysis, the terminal displays data entries containing non-alphanumeric ***unrecognized or unapproved characters***. By default, data warnings are hidden: warnings can be turned on by setting **`warning_display`** Boolean variable to `True`. The ***`cost_usd`*** setting controls precision of total drug cost: if 'True', final costs are rounded to nearest dollar instead of cent. The accepted alphanumeric, special, and escape characters – that is, characters that do not trigger data warning during parsing – can be modified by adding or removing characters to the **`safe_char`** list. Note that during drug sorting, all alphabetic characters are considered as their uppercase equivalents.
 
 # Mechanisms
 
