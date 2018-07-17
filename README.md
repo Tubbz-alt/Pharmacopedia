@@ -46,7 +46,7 @@ To analyze custom data, update import and export paths in `run.sh` using a text 
 ## Additional settings
 In the advanced settings section of the `src/Pharmacopedia.py` main module, performance and behaviors can be controlled. During analysis, the terminal display can data entries containing non-alphanumeric ***unrecognized or unapproved characters***. By default, data warnings are hidden: warnings can be turned on by setting **`warning_display`** Boolean variable to `True`. The ***`cost_usd`*** setting controls precision of total drug cost: if `True`, final costs are rounded to nearest dollar instead of cent. The accepted alphanumeric, special, and escape characters – that is, characters that do not trigger data warning during parsing – can be modified by adding or removing characters to the **`safe_char`** list. Note that during drug sorting, all alphabetic characters are considered as their uppercase equivalents.
 
-***Theses settings can be configured to "clean" drug names by ignoring un-approved characters.*** The ***`safe_char`*** list must represent an exclusive set containing only approved characters, and ***`sorting option`*** must be specified as `True` in colland line. Note drug names are shown in final analysis results as they appear in the original input data file.
+***Theses settings can be configured to "clean" drug names by ignoring un-approved characters.*** The ***`safe_char`*** list must represent an exclusive set containing only approved characters, and ***`sorting option`*** must be specified as `True` in the command line interface or `run.sh` Bash script. Note drug names are shown in final analysis results as they originally appear in the input data file.
 
 # Mechanisms
 
