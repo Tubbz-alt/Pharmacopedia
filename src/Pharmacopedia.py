@@ -88,7 +88,7 @@ if __name__ == "__main__":
     ## START SCRIPT
     # Displays script header in terminal
     print(
-        "\nPharmacy Counting v1.0\n"
+        "\nPharmacopedia v1.0\n"
         "========================\n"
     )
 
