@@ -47,7 +47,8 @@ To analyze custom data, update import and export paths in `run.sh` using a text 
 In the advanced settings section of the `src/Pharmacopedia.py` main module, performance and behaviors can be controlled. Data warnings can be turned off by setting **`warning_display`** Boolean variable to `False`. The accepted alphanumeric, special, and escape characters – that is, characters that do not trigger data warning during parsing – can be modified by adding or removing characters to the **`safe_char`** list. Note that during drug sorting, all alphabetic characters are considered as their uppercase equivalents.
 
 # Mechanisms
-Using Python’s built-in data analysis functions, PharmaPy manages, processes, and displays data for all drugs in its knowledgebase. Compatible input data is organized by prescriber: his or her information (viz., identification number, ID; first name; and last name) is associated with each prescription name and cost. PharmaPy exports data organized by drug: for each unique drug name, number of unique prescribers and total cost are reported in order of decreasing cost and alphanumeric order. See Remarks section for technical detail about regex-free parsing, data integrity checking, and dictionary-based storage.
+
+Using Python’s built-in data analysis functions, PharmaPy manages, processes, and displays data for all drugs in its knowledge base. Compatible input data is organized by prescriber: his or her information (viz., identification number, ID; first name; and last name) is associated with each prescription name and cost. PharmaPy exports data organized by drug: for each unique drug name, number of unique prescribers and total cost are reported in order of decreasing cost and alphanumeric order. See Remarks section for technical detail about regex-free parsing, data integrity checking, and dictionary-based storage.
 
 Before importing data, PharmaPy assesses performance settings. Arguments are retrieved from the user via terminal. The script inspects import and export paths: if either import or export path is invalid, `file not found` and `file already exists` errors are respectively raised and script execution is terminated.
 
@@ -62,29 +63,41 @@ In the analysis report, entries are ordered by decreasing cost. If more than one
 Data export is performed using Python’s built-in **`write()`** function. In correctly sorted order, analysis data is queried, formatted, and written to the new output text file. After writing all processed data, the file is automatically closed and the script run is complete.
 
 # Remarks
-DICTIONARY DATA STRUCTURE.
 
-INTELLIGENT PARSING.
-
-CHARACTER CHECKING.
-
-KEY-MODIFIED SORTING. PharmaPy handles sorting by 
-
-# Requirements
-PharmaPy requires Python 3.6 and the `os`, `sys`, and `warning` modules. The script can be executed via Bash shell script or command line interface.
-
-The design of this script makes the following assumptions:
+PharmaPy is designed for robust data engineering without use of external libraries. The design of this script makes the following assumptions:
 - Drug name should appear and be sorted exactly as shown in input data set
 - Prescribers with same last and first name are considered to be the same person
 - For given drug and prescriber, drug cost can appear more than once
+- All double quotation characters `"` are significant and cannot be typographical errors
 
-PharmaPy consists of four modules. The `src/Pharmacopedia.Py` module is the main script that controls data import, analysis, sorting, and export. The `src/DysartImport.Py` module contains all functions related to data import and parsing. The `src/DysartAnalysis.Py` module contains all functions related to data processing and sorting. The `src/DysartExport.Py` module contains all functions related to data formatting and exporting. The `src/DysartComm.Py` module contains all functions related to terminal display and communication, including error and warning reports.
+A description of particular design strateigies is given below.
+
+## Parsing and reconstruction
+
+![Schematic of parsing and reconstruction functions](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/reconstruction_schematic.png)
+
+## Data entry and retrieval
+PharmaPy's primary data structure is the nested dictionary. Dictionaries afford speed in storage and retrieval for big data analysis that does not require deep nesting [1]. The speed of key-based dictionary queries is at most of order 1 `O(1)` due to hashing data storage [2]. In comparison, lists require sequential iteration over its elements by index until query conditions are met. This results in speed of list queries to be proportional to the number of elements `O(n)` [2]. Individual prescriber costs are the secondary value of the imported data dictionary. These values are stored in lists to account for multiple costs for a given drug and prescriber.
+
+To count unique prescribers, the total prescribers is queried with set comprehension. Collection of prescribers as a set rather than a list ensures duplicate entries, if existing, are ignored [2]. The hashing philosophy of sets also provide performance benefits [2].
+
+## Dual sorting criteria
+PharmaPy handles sorting by 
+
+# Requirements
+
+PharmaPy requires Python 3.6 and the `os`, `sys`, and `warning` modules. The script can be executed via Bash shell script or command line interface.
+
+PharmaPy consists of four modules which must be located in the `src/` directory. The `src/Pharmacopedia.Py` module is the main script that controls data import, analysis, sorting, and export. The `src/DysartImport.Py` module contains all functions related to data import and parsing. The `src/DysartAnalysis.Py` module contains all functions related to data processing and sorting. The `src/DysartExport.Py` module contains all functions related to data formatting and exporting. The `src/DysartComm.Py` module contains all functions related to terminal display and communication, including error and warning reports.
 
 # Credits
+
 Pharmacopedia is a portmanteau of “pharmacopoeia,” a repository for pharmaceuticals, and “encyclopedia,” a reservoir for knowledge. This project was created by Arthur Dysart as part of the “Pharmacy Counting” coding project. Scripts developed using Spyder IDE.
 
 During development, sample data was obtained from the Centers for Medicare & Medicaid Services. The pre-cleaned data includes medical physician names, unique identification numbers, prescribed drugs, and total drug cost.
 
 # References
-- <a href="https://stackoverflow.com/questions/11456850">https://stackoverflow.com/questions/11456850</a>
-- <a href="https://stackoverflow.com/questions/25501622">https://stackoverflow.com/questions/25501622</a>
+[1] <a href="https://stackoverflow.com/questions/3489071">https://stackoverflow.com/questions/3489071</a>
+[2] <a href="https://stackoverflow.com/questions/513882">https://stackoverflow.com/questions/513882</a>
+[3] <a href="https://stackoverflow.com/questions/11456850">https://stackoverflow.com/questions/11456850</a>
+[4]  <a href="https://stackoverflow.com/questions/25501622">https://stackoverflow.com/questions/25501622</a>
