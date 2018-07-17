@@ -79,8 +79,10 @@ def export_data(processed_data, all_drugs_sorted, export_path, cost_usd):
                 total_cost = "{:.2f}".format(processed_data[drug][1])
             # Creates final export string for given drug
             export_text = ",".join([drug,num_prescriber,total_cost])
-            # Adds line break to final export string
-            export_text = "".join([export_text,"\n"])
+            #If not the last drug, add line break
+            if drug != all_drugs_sorted[-1]:
+                # Adds line break to final export string
+                export_text = "".join([export_text,"\n"])
             # Writes data entry to output file
             target_file.write(export_text)
     # Completes analyzed data export during file writing

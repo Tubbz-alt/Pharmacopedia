@@ -66,9 +66,11 @@ Data export is performed using Python’s built-in **`write()`** function. In co
 
 PharmaPy is designed for robust data engineering without use of external libraries. The design of this script makes the following assumptions:
 - Drug name should appear and be sorted exactly as shown in input data set
-- Prescribers with same last and first name are considered to be the same person
+- Lowercase alphabetic characters are treated as uppercase characters only for sorting
+- Prescribers with same last and first name are considered the same person
 - For given drug and prescriber, drug cost can appear more than once
 - All double quotation characters `"` are significant and cannot be typographical errors
+- All input file entries containing less than 1 comma are considered empty lines 
 
 A description of particular design strateigies is given below.
 
@@ -79,7 +81,7 @@ Conventional string parsing by comma delimiters `,` fails in strings containing 
 
 ![Schematic of parsing and reconstruction functions](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/reconstruction_schematic.png)
 
-The ***`parse_warn()`*** function gives real-time information regarding data cleanliness and parsing quality. This function determines whether a data entry contains unapproved characters by comparsion with the specified ***`safe_char`*** list. A warning message, with the full data string, is displayed in the terminal if un-approved characters are found in the string.
+The ***`parse_warn()`*** function gives real-time information regarding data cleanliness and parsing quality. This function determines whether a data entry contains unapproved characters by comparsion with the specified ***`safe_char`*** list. A warning message, with the full data string, is displayed in the terminal if un-approved characters are found in the string. This feature is disabled if the ***`warning_display`*** advanced setting is set to `False`.
 
 ## Data entry and retrieval
 PharmaPy's primary data structure is the nested dictionary. Dictionaries afford speed in storage and retrieval for big data analysis that does not require deep nesting [3]. The speed of key-based dictionary queries is at most of order 1 `O(1)` due to hashing data storage [4]. In comparison, lists require sequential iteration over its elements by index until query conditions are met. This results in speed of list queries to be proportional to the number of elements `O(n)` [4]. Individual prescriber costs are the secondary value of the imported data dictionary. These values are stored in lists to account for multiple costs for a given drug and prescriber.

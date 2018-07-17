@@ -1,0 +1,6 @@
+id,prescriber_last_name,prescriber_first_name,drug_name,drug_cost
+1000000002,Doe,John,BENICAR,1000
+1000000001,Doe,John,ADVAIR DISKUS,1000
+1000000004,Doe,John,DULOXETINE HCL,1000
+1000000005,Doe,John,ZETIA,1000
+1000000003,Doe,John,CRESTOR,1000
