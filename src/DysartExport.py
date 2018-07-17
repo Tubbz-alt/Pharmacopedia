@@ -70,7 +70,7 @@ def export_data(processed_data, all_drugs_sorted, export_path):
             # Sets number of prescribers
             num_prescriber = "{}".format(processed_data[drug][0])
             # Sets total drug cost
-            total_cost = "{:.2f}".format(processed_data[drug][1])
+            total_cost = "{:.0f}".format(processed_data[drug][1])
             # Creates final export string for given drug
             export_text = ",".join([drug,num_prescriber,total_cost])
             # Adds line break to final export string
