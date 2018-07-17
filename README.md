@@ -32,7 +32,7 @@ python3    [main path]    [import path]    [export path]    [sorting option]
 - **`export path`** indicates output file location. Using sample data, the export path is `./output/top_cost_drug.txt`.
 - **`sorting option`** indicates handling of non-alphanumerics in the sorting method. By default, non-alphanumerics in drug names are not ignored during sorting.
 
-PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. During analysis, the terminal displays data entries containing non-alphanumeric ***unrecognized or unapproved characters*. After analysis, the terminal displays the export path and ends the script. 
+PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. During analysis, the terminal displays data entries containing non-alphanumeric ***unrecognized or unapproved characters***. After analysis, the terminal displays the export path and ends the script. 
 
 ![Pharmacopedia can be executed via command line](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/cli_0.png)
 
