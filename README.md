@@ -1,3 +1,4 @@
+![Pharmacopedia: The medical prescription database](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/pharmapy_logo.png)
 Pharmacopedia: The medical prescription database
 
 Navigation
@@ -18,7 +19,6 @@ Download Github repository. Install Python version 3.6 and Git Bash; ensure Pyth
 
 PharmaPy analysis is executed using command line or shell script.
 
- 
 ## Command line interface
 Execute the following command:
 
@@ -30,13 +30,16 @@ python3    [main path]    [import path]    [export path]    [sorting option]
 - **`main path`** indicates main script location. From the home directory, the main path is `./src/Pharmacopedia.Py`.
 - **`import path`** indicates input file location. Using sample data, the import path is `./input/itcont.txt`.
 - **`export path`** indicates output file location. Using sample data, the export path is `./output/top_cost_drug.txt`.
-- **`sorting method`** indicates handling of non-alphanumerics in the sorting method. By default, non-alphanumerics in drug names are not ignored during sorting.
+- **`sorting option`** indicates handling of non-alphanumerics in the sorting method. By default, non-alphanumerics in drug names are not ignored during sorting.
 
 PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. During analysis, the terminal displays data entries containing unrecognized or questionable non-alphanumeric characters. After analysis, the terminal displays the export path and ends the script. 
 
- 
+![Pharmacopedia can be executed via command line](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/cli_0.png)
+
 ## Shell script
 Ensure source file exists in `input/` directory, and target file does not exist in `output/` directory. Execute `run.sh` in the home directory to import, analyze, and sort data. The preconfigured `run.sh` script analyzes sample data from `input/itcont.txt` source file and exports analysis results to `output/top_cost_drug.txt` target file.
+
+![Pharmacopedia can be executed via shell script](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/cli_0.png)
 
 To analyze custom data, update import and export paths in `run.sh` using a text editor. Ensure data is comma-delimited plaintext and follows formatting guidelines of the Centers for Medicare & Medicaid Services. The shell script can also be executed in command line with command `bash run.sh` while in the home directory.
 
@@ -66,7 +69,6 @@ INTELLIGENT PARSING.
 CHARACTER CHECKING.
 
 KEY-MODIFIED SORTING. PharmaPy handles sorting by 
- 
 
 # Requirements
 PharmaPy requires Python 3.6 and the `os`, `sys`, and `warning` modules. The script can be executed via Bash shell script or command line interface.
