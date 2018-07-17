@@ -2,20 +2,20 @@
 Pharmacopedia: The medical prescription database
 
 Navigation
-1. [QUICK START](README.md#problem)
-2. [MECHANISMS](README.md#input-dataset)
-3. [REMARKS](README.md#instructions)
-4. [REQUIREMENTS](README.md#output)
-5. [CREDITS](README.md#tips-on-getting-an-interview)
+1. [QUICK START](README.md#Quick-start-guide)
+2. [MECHANISMS](README.md#Mechanisms)
+3. [REMARKS](README.md#Remarks)
+4. [REQUIREMENTS](README.md#Requirements)
+5. [CREDITS](README.md#Credits)
 
-Pharmacopedia.Py (PharmaPy) enables online pharmacies to catalog prescriptions and analyze medical data. PharmaPy is compatible with comma-delimited text data from the Centers for Medicare & Medicaid Services. For each unique drug in its database, PharmaPy reports total drug cost and number of unique prescribers. Analysis reports are organized by drug name in sequence of decreasing total cost and alphanumeric order.
+Pharmacopedia.Py (PharmaPy) enables online pharmacies to catalog prescriptions and analyze medical data. PharmaPy is compatible with comma-delimited text data from the Centers for Medicare & Medicaid Services. For each unique drug in its database, PharmaPy reports ***total cost*** and ***number of unique prescribers***. Analysis reports are organized by drug name in sequence of ***decreasing total cost*** and ***alphanumeric order***.
 
 # Quick start guide
 
 PharmaPy is built on Python 3.6 and requires the `os`, `sys`, and `warning` modules.
 
 ## Installation and setup
-Download Github repository. Install Python version 3.6 and Git Bash; ensure Python and Bash are available on the OS system path. Put the input data file in the `input/` directory. Note PharmaPy only analyzes comma-delimited plaintext data which follow formatting guidelines of the Centers for Medicare & Medicaid Services.
+Download Github repository. Install Python version 3.6 and Git Bash; ensure Python and Bash are available on the operating system path. Put the input data file in the `input/` directory. Note PharmaPy only analyzes comma-delimited plaintext data which follow formatting guidelines of the Centers for Medicare & Medicaid Services.
 
 PharmaPy analysis is executed using command line or shell script.
 
@@ -32,7 +32,7 @@ python3    [main path]    [import path]    [export path]    [sorting option]
 - **`export path`** indicates output file location. Using sample data, the export path is `./output/top_cost_drug.txt`.
 - **`sorting option`** indicates handling of non-alphanumerics in the sorting method. By default, non-alphanumerics in drug names are not ignored during sorting.
 
-PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. During analysis, the terminal displays data entries containing unrecognized or questionable non-alphanumeric characters. After analysis, the terminal displays the export path and ends the script. 
+PharmaPy communicates with the user through the terminal.  Before analysis, the terminal indicates the number of terminal arguments, the primary and secondary sorting methods, and import path. During analysis, the terminal displays data entries containing non-alphanumeric ***unrecognized or unapproved characters*. After analysis, the terminal displays the export path and ends the script. 
 
 ![Pharmacopedia can be executed via command line](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/cli_0.png)
 
@@ -48,7 +48,7 @@ In the advanced settings section of the `src/Pharmacopedia.py` main module, perf
 
 # Mechanisms
 
-Using Python’s built-in data analysis functions, PharmaPy manages, processes, and displays data for all drugs in its knowledge base. Compatible input data is organized by prescriber: his or her information (viz., identification number, ID; first name; and last name) is associated with each prescription name and cost. PharmaPy exports data organized by drug: for each unique drug name, number of unique prescribers and total cost are reported in order of decreasing cost and alphanumeric order. See Remarks section for technical detail about regex-free parsing, data integrity checking, and dictionary-based storage.
+PharmaPy manages, processes, and displays data for all drugs in its knowledge base using Python’s built-in data analysis functions. Compatible input data is organized by prescriber: his or her information (viz., identification number, ID; first name; and last name) is associated with each prescription name and cost. PharmaPy exports data organized by drug: for each unique drug name, ***number of unique prescribers*** and ***total cost*** are reported in order of ***decreasing cost*** and ***alphanumeric order***. See Remarks section for technical detail about regex-free parsing, data integrity checking, and dictionary-based storage.
 
 Before importing data, PharmaPy assesses performance settings. Arguments are retrieved from the user via terminal. The script inspects import and export paths: if either import or export path is invalid, `file not found` and `file already exists` errors are respectively raised and script execution is terminated.
 
@@ -73,9 +73,9 @@ PharmaPy is designed for robust data engineering without use of external librari
 A description of particular design strateigies is given below.
 
 ## Parsing and reconstruction
-Survey of the sample data shows some alphanumeric strings are surrounded by double-quotation marks `"`. The consistent appearance of this character marks significance: the enclosed substring intends to comrpise an entire entry. If double-quotation marks surround a substring, then the substring contains comma characters `,` which are not intended to be delimiters.
+Survey of the sample data shows some alphanumeric strings are surrounded by double-quotation marks `"`. The consistent appearance of this character marks significance: the enclosed substring comprises an entire entry. If double-quotation marks surround a substring, then the substring contains comma characters `,` which are not intended to be delimiters.
 
-Conventional string parsing by comma delimiters `,` fails in strings containing double-quotation marks `"`. This is because the ***`str.split()`*** function does not natively descriminate whether specified delimiters are active or inactive. To address this, PharmaPy rectifies and reconstructs substrings with incorrectly delimited comma characters `,` using the ***`parse_line_custom()`*** function. This function analyzes strings containing double-quotation marks `"` and pairs sequential elements which contain a single double-quotation mark `"`. Elements between these target elements, inclusive of the targets themselves, are concatenated with a comma character `,` using the ***`str.join()`*** function. Similar approaches can be realized through the use of regular expressions to differentiate between delimiter-active and inactive comma characters `,` [1, 2].
+Conventional string parsing by comma delimiters `,` fails in strings containing double-quotation marks `"`. This is because the ***`str.split()`*** function does not natively descriminate whether specified delimiters are active or inactive. To address this, PharmaPy rectifies and reconstructs substrings with incorrectly delimited comma characters using the ***`parse_line_custom()`*** function. This function analyzes strings containing double-quotation marks and pairs sequential elements which contain a single double-quotation mark. Elements between these target elements, inclusive of the targets themselves, are concatenated with a comma character `,` using the ***`str.join()`*** function. Similar approaches can be realized through the use of regular expressions to differentiate between delimiter-active and inactive comma characters [1, 2].
 
 ![Schematic of parsing and reconstruction functions](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/reconstruction_schematic.png)
 
@@ -102,8 +102,9 @@ Pharmacopedia is a portmanteau of “pharmacopoeia,” a repository for pharmace
 During development, sample data was obtained from the Centers for Medicare & Medicaid Services. The pre-cleaned data includes medical physician names, unique identification numbers, prescribed drugs, and total drug cost.
 
 # References
-[1] <a href="https://stackoverflow.com/questions/11456850">https://stackoverflow.com/questions/11456850</a>
-[2]  <a href="https://stackoverflow.com/questions/25501622">https://stackoverflow.com/questions/25501622</a>
-[3] <a href="https://stackoverflow.com/questions/3489071">https://stackoverflow.com/questions/3489071</a>
-[4] <a href="https://stackoverflow.com/questions/513882">https://stackoverflow.com/questions/513882</a>
-[5] <a href="https://docs.python.org/3/howto/sorting.html">https://docs.python.org/3/howto/sorting.html</a>
+
+1. <a href="https://stackoverflow.com/questions/11456850">https://stackoverflow.com/questions/11456850</a>
+2.  <a href="https://stackoverflow.com/questions/25501622">https://stackoverflow.com/questions/25501622</a>
+3. <a href="https://stackoverflow.com/questions/3489071">https://stackoverflow.com/questions/3489071</a>
+4. <a href="https://stackoverflow.com/questions/513882">https://stackoverflow.com/questions/513882</a>
+5. <a href="https://docs.python.org/3/howto/sorting.html">https://docs.python.org/3/howto/sorting.html</a>
