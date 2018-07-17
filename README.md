@@ -44,7 +44,7 @@ Ensure source file exists in `input/` directory, and target file does not exist 
 To analyze custom data, update import and export paths in `run.sh` using a text editor. Ensure data is comma-delimited plaintext and follows formatting guidelines of the Centers for Medicare & Medicaid Services. The shell script can also be executed in command line with command `bash run.sh` while in the home directory.
 
 ## Additional settings
-In the advanced settings section of the `src/Pharmacopedia.py` main module, performance and behaviors can be controlled. Data warnings can be turned off by setting **`warning_display`** Boolean variable to `False`. The accepted alphanumeric, special, and escape characters – that is, characters that do not trigger data warning during parsing – can be modified by adding or removing characters to the **`safe_char`** list. Note that during drug sorting, all alphabetic characters are considered as their uppercase equivalents.
+In the advanced settings section of the `src/Pharmacopedia.py` main module, performance and behaviors can be controlled. Data warnings can be turned off by setting **`warning_display`** Boolean variable to `False`. The ***`cost_usd`*** setting controls precision of total drug cost: if 'True', final costs are rounded to nearest dollar instead of cent. The accepted alphanumeric, special, and escape characters – that is, characters that do not trigger data warning during parsing – can be modified by adding or removing characters to the **`safe_char`** list. Note that during drug sorting, all alphabetic characters are considered as their uppercase equivalents.
 
 # Mechanisms
 

@@ -64,11 +64,14 @@ import DysartExport as ad3
 
 ## SCRIPT SETTINGS
 
-# If None, sets traceback errors to off (DEBUG mode)
+# If None, sets traceback errors off (PRODUCTION mode)
 sys.tracebacklimit = None
 # If False, sets terminal warning display to off
 warning_display = False
-# Sets safe characters, which do not trigger warning, during parse check
+# If True, sets final cost display in dollars only
+# If False, sets final cost display in dollars and cents
+cost_usd = True
+# Sets safe characters, which do not trigger warning, during parse check.
 # Note all alphabetic characters are automatically converted into uppercase
 # for sorting and parse check
 safe_char = [
@@ -104,7 +107,7 @@ if __name__ == "__main__":
 
     ## EXPORT DATA
     # Writes ordered data to new file at export path
-    ad3.export_data(processed_data, all_drugs_sorted, export_path)
+    ad3.export_data(processed_data, all_drugs_sorted, export_path, cost_usd)
 
     ## END SCRIPT
     # Displays script footer in terminal
