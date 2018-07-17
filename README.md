@@ -73,16 +73,21 @@ PharmaPy is designed for robust data engineering without use of external librari
 A description of particular design strateigies is given below.
 
 ## Parsing and reconstruction
+Survey of the sample data shows some alphanumeric strings are surrounded by double-quotation marks `"`. The consistent appearance of this character marks significance: the enclosed substring intends to comrpise an entire entry. If double-quotation marks surround a substring, then the substring contains comma characters `,` which are not intended to be delimiters.
+
+Conventional string parsing by comma delimiters `,` fails in strings containing double-quotation marks `"`. This is because the ***`str.split()`*** function does not natively descriminate whether specified delimiters are active or inactive. To address this, PharmaPy rectifies and reconstructs substrings with incorrectly delimited comma characters `,` using the ***`parse_line_custom()`*** function. This function analyzes strings containing double-quotation marks `"` and pairs sequential elements which contain a single double-quotation mark `"`. Elements between these target elements, inclusive of the targets themselves, are concatenated with a comma character `,` using the ***`str.join()`*** function. Similar approaches can be realized through the use of regular expressions to differentiate between delimiter-active and inactive comma characters `,` [1, 2].
 
 ![Schematic of parsing and reconstruction functions](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/reconstruction_schematic.png)
 
-## Data entry and retrieval
-PharmaPy's primary data structure is the nested dictionary. Dictionaries afford speed in storage and retrieval for big data analysis that does not require deep nesting [1]. The speed of key-based dictionary queries is at most of order 1 `O(1)` due to hashing data storage [2]. In comparison, lists require sequential iteration over its elements by index until query conditions are met. This results in speed of list queries to be proportional to the number of elements `O(n)` [2]. Individual prescriber costs are the secondary value of the imported data dictionary. These values are stored in lists to account for multiple costs for a given drug and prescriber.
+The ***`parse_warn()`*** function gives real-time information regarding data cleanliness and parsing quality. This function determines whether a data entry contains unapproved characters by comparsion with the specified ***`safe_char`*** list. A warning message, with the full data string, is displayed in the terminal if un-approved characters are found in the string.
 
-To count unique prescribers, the total prescribers is queried with set comprehension. Collection of prescribers as a set rather than a list ensures duplicate entries, if existing, are ignored [2]. The hashing philosophy of sets also provide performance benefits [2].
+## Data entry and retrieval
+PharmaPy's primary data structure is the nested dictionary. Dictionaries afford speed in storage and retrieval for big data analysis that does not require deep nesting [3]. The speed of key-based dictionary queries is at most of order 1 `O(1)` due to hashing data storage [4]. In comparison, lists require sequential iteration over its elements by index until query conditions are met. This results in speed of list queries to be proportional to the number of elements `O(n)` [4]. Individual prescriber costs are the secondary value of the imported data dictionary. These values are stored in lists to account for multiple costs for a given drug and prescriber.
+
+To count unique prescribers, the total prescribers is queried with set comprehension. Collection of prescribers as a set rather than a list ensures duplicate entries, if existing, are ignored [4]. The hashing philosophy of sets also provide performance benefits [4].
 
 ## Dual sorting criteria
-PharmaPy handles sorting by 
+PharmaPy handles sorting using the ***`sorted()`*** function. This function enables conditional ordering based on specified key-determining functions [5]. For each drug, PharmaPy's key function calculates (1) negative of the total cost and (2) the safe-character corrected equivalent of drug name. Drug names, as the keys of the processed data dictionary, are sorted by these criteria and returned in the required order.
 
 # Requirements
 
@@ -97,7 +102,8 @@ Pharmacopedia is a portmanteau of “pharmacopoeia,” a repository for pharmace
 During development, sample data was obtained from the Centers for Medicare & Medicaid Services. The pre-cleaned data includes medical physician names, unique identification numbers, prescribed drugs, and total drug cost.
 
 # References
-[1] <a href="https://stackoverflow.com/questions/3489071">https://stackoverflow.com/questions/3489071</a>
-[2] <a href="https://stackoverflow.com/questions/513882">https://stackoverflow.com/questions/513882</a>
-[3] <a href="https://stackoverflow.com/questions/11456850">https://stackoverflow.com/questions/11456850</a>
-[4]  <a href="https://stackoverflow.com/questions/25501622">https://stackoverflow.com/questions/25501622</a>
+[1] <a href="https://stackoverflow.com/questions/11456850">https://stackoverflow.com/questions/11456850</a>
+[2]  <a href="https://stackoverflow.com/questions/25501622">https://stackoverflow.com/questions/25501622</a>
+[3] <a href="https://stackoverflow.com/questions/3489071">https://stackoverflow.com/questions/3489071</a>
+[4] <a href="https://stackoverflow.com/questions/513882">https://stackoverflow.com/questions/513882</a>
+[5] <a href="https://docs.python.org/3/howto/sorting.html">https://docs.python.org/3/howto/sorting.html</a>
