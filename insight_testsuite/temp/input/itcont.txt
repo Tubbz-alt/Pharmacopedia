@@ -1,6 +1,0 @@
-id,prescriber_last_name,prescriber_first_name,drug_name,drug_cost
-1000000002,Doe,John,Benicar,1000
-1000000001,Doe,John,Advair Diskus,1000
-1000000004,Doe,John,DulOxetine HCL,1000
-1000000005,Doe,John,ZeTiA,1000
-1000000003,Doe,John,crestor,1000
