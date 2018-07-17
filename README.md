@@ -39,7 +39,7 @@ PharmaPy communicates with the user through the terminal.  Before analysis, the 
 ## Shell script
 Ensure source file exists in `input/` directory, and target file does not exist in `output/` directory. Execute `run.sh` in the home directory to import, analyze, and sort data. The preconfigured `run.sh` script analyzes sample data from `input/itcont.txt` source file and exports analysis results to `output/top_cost_drug.txt` target file.
 
-![Pharmacopedia can be executed via shell script](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/cli_0.png)
+![Pharmacopedia can be executed via shell script](https://s3.amazonaws.com/arthur-dysart-github-media/pharmacopedia/bash_0.png)
 
 To analyze custom data, update import and export paths in `run.sh` using a text editor. Ensure data is comma-delimited plaintext and follows formatting guidelines of the Centers for Medicare & Medicaid Services. The shell script can also be executed in command line with command `bash run.sh` while in the home directory.
 
