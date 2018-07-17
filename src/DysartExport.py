@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Pharmacy Counting.Py
+Pharmacopedia.Py v1.0
+Pharmacy Counting Project
+Arhur D. Dysart
+
 
 DESCRIPTION
 
@@ -44,7 +47,7 @@ SOFTWARE.
 
 def export_data(processed_data, all_drugs_sorted, export_path):
     """
-    Write all entries to output file.
+    Formats and writes all entries to export file.
 
     Args:
         processed_data (dictionary): contains all analyzed data. Primary key
@@ -74,17 +77,17 @@ def export_data(processed_data, all_drugs_sorted, export_path):
             export_text = "".join([export_text,"\n"])
             # Writes data entry to output file
             target_file.write(export_text)
-    # Completes analyzed data export
+    # Completes analyzed data export during file writing
     return None
 
 
 ## MODULE METADATA
 
 __author__ = 'Arthur D. Dysart'
-__copyright__ = 'Copyright 2018, Pharmacy Counting'
+__copyright__ = 'Copyright 2018, Pharmacopedia.Py'
 __credits__ = ['Arthur D. Dysart']
 __license__ = 'MIT License'
-__version__ = '0.0.5'
+__version__ = '1.0.0'
 __maintainer__ = 'Arthur D. Dysart'
 __email__ = 'hi@arthurdys.art'
 __status__ = 'closed'

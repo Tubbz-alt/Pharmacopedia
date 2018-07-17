@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Pharmacy Counting.Py
+Pharmacopedia.Py v1.0
+Pharmacy Counting Project
+Arhur D. Dysart
+
 
 DESCRIPTION
 
@@ -10,7 +13,7 @@ prescribers and (2) total prescriber expenditure for all listed drugs. Exports
 analyzed data to text file with drugs organized by decreasing cost and, where
 required, alphanumeric order. Created on 13:34:50 Wednesday, July 11, 2018.
 
-Ths module contains functions required for import of raw medical pharmacy data.
+Ths module contains functions required for import of raw data.
 
 Script metadata available at end of module.
 
@@ -41,8 +44,9 @@ SOFTWARE.
 
 ## REQUIRED LIBRARIES
 
-# Enables warning and error printing to terminal
-import DysartDebugFunctions as adb
+# Enables warning and error communication via terminal
+# Source: (home)/src/DysartComm.py
+import DysartComm as adc
 
 
 ## PRIMARY FUNCTIONS
@@ -121,30 +125,27 @@ def get_args(terminal_args):
     # Prints input path to terminal
     print("\nImport file:\t{}\n".format(import_path))
     # Checks integrity of input and export paths
-    adb.check_paths(import_path, export_path)
-    # Returns import path, export path, and secondary sorting method to script
+    adc.check_paths(import_path, export_path)
+    # Returns import path, export path, and sorting method to terminal
     return import_path, export_path, alpha_sort
 
 def import_data(import_path, warn=False, **kwargs):
     """
-    Collects, parses, and organizes data from imported file. See "Read Me" for
-    more information.
-    
-    For each data
+    Collects, parses, and organizes data from imported file. For each data
     entry or line, removes new line character and splits raw string according
     to comma delimiter. If "prescriber_last_name" is index 1 element, entry
     is identified as header row and skipped. Parsed entries are checked for
-    incorrect parsing using the parse_check() function. Parsed data entries
-    are assigned aliases. Collected data is stored in nested dictionary.
+    unsafe characters using the parse_line_custom() function. Parsed data
+    entries are assigned aliases. Import data is stored in nested dictionary.
     Prescriber first and last name are stored as tuple and implemented as
     dictionary key for corresponding drug cost. Primary key is drug name,
-    secondary key is prescriber name.
+    secondary key is prescriber name. See "Read Me" for more information.
 
     Args:
         import_path (string): path to input file.
         warn (boolean): if True, displays data entries with unsafe characters
             to the user terminal as warning.
-        char (list of strings): contains all safe characters.
+        char (list of strings): contains all string characters considered safe.
 
     Returns:
         all_data (nested dictionary): contains all collected, parsed, and
@@ -167,7 +168,7 @@ def import_data(import_path, warn=False, **kwargs):
             # If True, prints data entries with unsafe characters to terminal
             if warn:
                 # Warns for data entries with unsafe characters 
-                adb.parse_warn(*parsed_line, line=line, ch=kwargs['ch'])
+                adc.parse_warn(*parsed_line, line=line, ch=kwargs['ch'])
             # Sets prescriber id (index 0), last name (1), and first name (2)
             prescriber_id, last_name, first_name = parsed_line[:3]
             # Sets drug name (index 3) and drug cost (4)
@@ -191,9 +192,9 @@ def import_data(import_path, warn=False, **kwargs):
 def parse_line_custom(line):
     """
     Separates and splits data entry line based on comma delimiters and the
-    presence of double-quation marks. In the test data, double-quotation marks
-    represent entry elements which contain a non-delimiting comma. After
-    nondiscriminatory comma delimiting, over-delimited elements are 
+    presence of double-quation marks. In test data, double-quotation marks
+    represent entry elements which contain at least one non-delimiting comma.
+    After nondiscriminatory comma delimiting, over-delimited elements are 
     reconstructed according to the appearance of double-quotation marks.
 
     Args:
@@ -211,8 +212,8 @@ def parse_line_custom(line):
     # If number of double-quotation mark characters is not even, raise warning
     if num_quotes % 2 != 0:
         # Raises warning for uneven number of double-quotation mark characters
-        # suggesting unpaired quotation mark
-        adb.parse_warn_quotes(comma_split[0])
+        # which suggests presence of unpaired double-quotation mark
+        adc.parse_warn_quotes(comma_split[0])
     # If no double-quotation mark characters, splits line by comma delimiter
     if num_quotes == 0:
         # Splits line by comma delimiter only
@@ -222,12 +223,10 @@ def parse_line_custom(line):
     # characters, merges enclosed comma-separated elements into single element
     else:
         # Sets length of comma-separated line vector
-        index_range = range(0, len(comma_split))
+        i_range = range(0, len(comma_split))
         # Collects indicies of comma-separated line vector that contain only
         # one double-quotation mark character
-        quote_indices = [
-            i for i in index_range if comma_split[i].count("\"") == 1
-        ]
+        quote_indices = [i for i in i_range if comma_split[i].count("\"") == 1]
         # Sets number of double-quotation mark pairs
         num_quotes = range(0, len(quote_indices) // 2)
         # Collects all indicies with opening double-quotation mark characters
@@ -265,10 +264,10 @@ def parse_line_custom(line):
 ## MODULE METADATA
 
 __author__ = 'Arthur D. Dysart'
-__copyright__ = 'Copyright 2018, Pharmacy Counting'
+__copyright__ = 'Copyright 2018, Pharmacopedia.Py'
 __credits__ = ['Arthur D. Dysart']
 __license__ = 'MIT License'
-__version__ = '0.0.5'
+__version__ = '1.0.0'
 __maintainer__ = 'Arthur D. Dysart'
 __email__ = 'hi@arthurdys.art'
 __status__ = 'closed'

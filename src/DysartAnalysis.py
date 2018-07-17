@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Pharmacy Counting.Py
+Pharmacopedia.Py v1.0
+Pharmacy Counting Project
+Arhur D. Dysart
+
 
 DESCRIPTION
 
@@ -90,9 +93,9 @@ def sort_drugs(processed_data, alpha_sort, **kwargs):
     """
     Sorts all drug names, as primary keys of processed data dictionary. Sorting
     is governed by primary criteria of decreasing cost, then secondary criteria
-    of alphabetical order. Secondary criteria considers only alphanumeric
-    characters if "alpha_sort" is True, or both alphanumeric and special
-    characters if False. Requires sort_criteria() inner function.
+    of alphabetical order. Secondary criteria ignores unsafe characters if
+    "alpha_sort" is True; and does not ignore unsafe characters if False.
+    Requires sort_criteria() inner function.
 
     Args:
         processed_data (dictionary): contains all analyzed data. Primary key
@@ -102,6 +105,7 @@ def sort_drugs(processed_data, alpha_sort, **kwargs):
         alpha_sort (boolean): if True, special characters are not considered
             during sorting. If False, special characters are considered during
             sorting.
+        safe_char (list of strings): contains all characters considered safe.
 
     Returns:
         all_drugs_sorted (list of strings): contains all drug names in
@@ -146,10 +150,10 @@ def sort_drugs(processed_data, alpha_sort, **kwargs):
 ## MODULE METADATA
 
 __author__ = 'Arthur D. Dysart'
-__copyright__ = 'Copyright 2018, Pharmacy Counting'
+__copyright__ = 'Copyright 2018, Pharmacopedia.Py'
 __credits__ = ['Arthur D. Dysart']
 __license__ = 'MIT License'
-__version__ = '0.0.5'
+__version__ = '1.0.0'
 __maintainer__ = 'Arthur D. Dysart'
 __email__ = 'hi@arthurdys.art'
 __status__ = 'closed'

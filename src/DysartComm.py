@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Pharmacy Counting.Py
+Pharmacopedia.Py v1.0
+Pharmacy Counting Project
+Arhur D. Dysart
+
 
 DESCRIPTION
 
@@ -10,8 +13,8 @@ prescribers and (2) total prescriber expenditure for all listed drugs. Exports
 analyzed data to text file with drugs organized by decreasing cost and, where
 required, alphanumeric order. Created on 13:34:50 Wednesday, July 11, 2018.
 
-Ths module contains optional functions used during debugging or parsing data
-principally during data import.
+Ths module contains communication functions used during parsing data or in
+degub mode.
 
 Script metadata available at end of module.
 
@@ -93,6 +96,11 @@ def parse_warn(*args, **kwargs):
 
     Returns:
         None.
+
+    Raises:
+        Warning: Unsafe character found in prescriber last name.
+        Warning: Unsafe character found in prescriber first name.
+        Warning: Unsafe character found in drug name.
     """
     # Sets prescriber first name (index 1), last name (2), and drug name (3)
     last_name, first_name, drug_name = args[1],args[2], args[3]
@@ -101,44 +109,54 @@ def parse_warn(*args, **kwargs):
     # Sets safe characters list
     safe_char = kwargs['ch']
     # If unsafe character in prescriber last name, warn in terminal
-    if any(char for char in last_name if char not in safe_char):
+    if any(char for char in last_name.upper() if char not in safe_char):
         # Raises warning for unsafe character in prescriber last name
         wn.warn("(last_name):: {}".format(line))
     # If unsafe character in prescriber first name, warn in terminal
-    elif any(char for char in first_name if char not in safe_char):
+    elif any(char for char in first_name.upper() if char not in safe_char):
         # Raises warning for unsafe character in prescriber first name
         wn.warn("(first_name):: {}".format(line))
     # If unsafe character in drug name, warn in terminal
-    elif any(char for char in drug_name if char not in safe_char):
+    elif any(char for char in drug_name.upper() if char not in safe_char):
         # Raises warning for unsafe character in drug name
         wn.warn("(drug_name):: {}".format(line))
     # Passes parse character test
     return None
 
-def parse_warn_quotes(entry_id):
+def parse_warn_quotes(prescriber_id):
     """
-    Investigates imported data integrity of double quotation mark.
+    Returns statement to terminal stating presence of unpaired double-quotation
+    mark. Suggests typographic error with insignificant double-quotation mark
+    character.
 
     Args:
-        entry id (list of strings): contains strings parsed from data entry.
+        prescriber_id (string): contains index-0 string parsed from data entry.
 
     Returns:
         None.
+
+    Raises:
+        Warning: Unsignificant double-quotation mark may jeopardize parsing
+            integrity.
     """
     # Raises warning for uneven number of double-quotation mark characters
     # suggesting unpaired quotation mark
     wn.warn(
         "Entry with ID {} has an unpaired double-quotation mark, and likely "
         "to be incorrectly parsed. Check for typographic errors and run "
-        "again.".format(entry_id)
+        "again.".format(prescriber_id)
     )
-    # Completes warning
+    # Completes warning procedure
     return None
+
+
+## SECONDARY FUNCTIONS
 
 def parse_error(parsed_line, **kwargs):
     """
     Investigates imported data integrity. Required by import_data() function.
-    Requires alpha_only() and numbers_only() functions.
+    Requires alpha_only() and numbers_only() functions. Depreciated in module
+    version 1.0.0. Use for DEBUG only.
 
     Args:
         parsed_line (list of strings): contains strings parsed from data entry.
@@ -198,40 +216,44 @@ def alpha_only(target_string, safe_char):
     """
     Returns True if string contains all alphabetic and no numeric characters.
     Does not consider special characters. Checks quality of parsed prescriber
-    first and last names.
+    first and last names. Depreciated in module version 1.0.0.
+    Use for DEBUG only.
 
     Args:
         target_string (string): string checked for alphabetic characters.
+        safe_char (list of strings): string to be considered for sorting.
 
     Returns:
         (boolean): if True, only alphabetic or special characters in string.
     """
     # Returns True if string contains only alphabetic characters
-    return all(char.isalpha() for char in target_string if char not in safe_char)
+    return all(ch.isalpha() for ch in target_string if ch not in safe_char)
 
 def numbers_only(target_string, safe_char):
     """
     Returns True if string contains all numeric and no alphabetic characters.
     Does not consider special characters. Checks quality of parsed
-    prescriber ID and drug cost.
+    prescriber ID and drug cost. Depreciated in module version 1.0.0.
+    Use for DEBUG only.
 
     Args:
         target_string (string): string checked for numeric characters.
+        safe_char (list of strings): string to be considered for sorting.
 
     Returns:
         True (boolean): if only numeric or special characters in string.
     """
     # Returns True if string contains ony numeric characters
-    return all(char.isdigit() for char in target_string if char not in safe_char)
+    return all(ch.isdigit() for ch in target_string if ch not in safe_char)
 
 
 ## MODULE METADATA
 
 __author__ = 'Arthur D. Dysart'
-__copyright__ = 'Copyright 2018, Pharmacy Counting'
+__copyright__ = 'Copyright 2018, Pharmacopedia.Py'
 __credits__ = ['Arthur D. Dysart']
 __license__ = 'MIT License'
-__version__ = '0.0.5'
+__version__ = '1.0.0'
 __maintainer__ = 'Arthur D. Dysart'
 __email__ = 'hi@arthurdys.art'
 __status__ = 'closed'

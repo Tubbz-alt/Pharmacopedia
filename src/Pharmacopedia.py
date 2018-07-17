@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Pharmacy Counting.Py
+Pharmacopedia.Py v1.0
+Pharmacy Counting Project
+Arhur D. Dysart
+
 
 DESCRIPTION
 
@@ -10,8 +13,8 @@ prescribers and (2) total prescriber expenditure for all listed drugs. Exports
 analyzed data to text file with drugs organized by decreasing cost and, where
 required, alphanumeric order. Created on 13:34:50 Wednesday, July 11, 2018.
 
-Ths module is the primary module which handles import, analysis, and export
-of medical pharmacy data.
+This is the main module which handles import, analysis, sorting, and export
+of medical drug data.
 
 Script metadata available at end of module.
 
@@ -49,23 +52,25 @@ import sys
 ## REQUIRED LIBRARIES
 
 # Retrives functions for data import
-# Source: ./src/DysartImportFunctions.py
-import DysartImportFunctions as ad1
+# Source: (home)/src/DysartImport.py
+import DysartImport as ad1
 # Retrives functions for data analysis
-# Source: ./src/DysartAnalysisFunctions.py
-import DysartAnalysisFunctions as ad2
+# Source: (home)/src/DysartAnalysis.py
+import DysartAnalysis as ad2
 # Retrives functions for data export
-# Source: ./src/DysartExportFunctions.py
-import DysartExportFunctions as ad3
+# Source: (home)/src/DysartExport.py
+import DysartExport as ad3
 
 
-## PARAMETER DEFINITIONS
+## SCRIPT SETTINGS
 
-# Retrieves input variables from terminal
-terminal_args = sys.argv
-# Sets traceback errors to off
+# If None, sets traceback errors to off (DEBUG mode)
 sys.tracebacklimit = None
-# Sets safe characters during parse check
+# If False, sets terminal warning display to off
+warning_display = False
+# Sets safe characters, which do not trigger warning, during parse check
+# Note all alphabetic characters are automatically converted into uppercase
+# for sorting and parse check
 safe_char = [
     "A","B","C","D","E","F","G","H","I","J","K","L","M",
     "N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
@@ -86,10 +91,10 @@ if __name__ == "__main__":
 
     ## IMPORT DATA
     # Retrives and checks arguments from terminal
-    import_path, export_path, alpha_sort = ad1.get_args(terminal_args)
+    import_path, export_path, alpha_sort = ad1.get_args(sys.argv)
     # Organizes data in nested dictionary according to drug (1* key),
-    # prescriber (2* key), and cost (2* value)
-    all_data = ad1.import_data(import_path, warn=True, ch=safe_char)
+    # prescriber (2* key), and cost (2* value). Also sets warnings 
+    all_data = ad1.import_data(import_path, warn=warning_display, ch=safe_char)
 
     ## ANALYZE DATA
     # Calculates prescriber count (index 0) and cost (index 1) for each drug
@@ -111,10 +116,10 @@ if __name__ == "__main__":
 ## MODULE METADATA
 
 __author__ = 'Arthur D. Dysart'
-__copyright__ = 'Copyright 2018, Pharmacy Counting'
+__copyright__ = 'Copyright 2018, Pharmacopedia.Py'
 __credits__ = ['Arthur D. Dysart']
 __license__ = 'MIT License'
-__version__ = '0.0.5'
+__version__ = '1.0.0'
 __maintainer__ = 'Arthur D. Dysart'
 __email__ = 'hi@arthurdys.art'
 __status__ = 'closed'
