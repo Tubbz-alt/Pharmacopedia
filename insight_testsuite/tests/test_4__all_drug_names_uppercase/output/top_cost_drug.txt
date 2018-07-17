@@ -1,0 +1,6 @@
+drug_name,num_prescriber,total_cost
+Advair Diskus,1,1000
+Benicar,1,1000
+crestor,1,1000
+DulOxetine HCL,1,1000
+ZeTiA,1,1000

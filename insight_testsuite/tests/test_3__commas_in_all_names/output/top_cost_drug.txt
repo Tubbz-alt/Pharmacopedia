@@ -1,0 +1,2 @@
+drug_name,num_prescriber,total_cost
+"PANCRELIPASE 5,000",5,5000
