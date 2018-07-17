@@ -46,6 +46,8 @@ To analyze custom data, update import and export paths in `run.sh` using a text 
 ## Additional settings
 In the advanced settings section of the `src/Pharmacopedia.py` main module, performance and behaviors can be controlled. During analysis, the terminal display can data entries containing non-alphanumeric ***unrecognized or unapproved characters***. By default, data warnings are hidden: warnings can be turned on by setting **`warning_display`** Boolean variable to `True`. The ***`cost_usd`*** setting controls precision of total drug cost: if 'True', final costs are rounded to nearest dollar instead of cent. The accepted alphanumeric, special, and escape characters – that is, characters that do not trigger data warning during parsing – can be modified by adding or removing characters to the **`safe_char`** list. Note that during drug sorting, all alphabetic characters are considered as their uppercase equivalents.
 
+***Theses settings can be configured to "clean" data sets by ignoring un-approved characters.***
+
 # Mechanisms
 
 PharmaPy manages, processes, and displays data for all drugs in its knowledge base using Python’s built-in data analysis functions. Compatible input data is organized by prescriber: his or her information (viz., identification number, ID; first name; and last name) is associated with each prescription name and cost. PharmaPy exports data organized by drug: for each unique drug name, ***number of unique prescribers*** and ***total cost*** are reported in order of ***decreasing cost*** and ***alphanumeric order***. See Remarks section for technical detail about regex-free parsing, data integrity checking, and dictionary-based storage.
