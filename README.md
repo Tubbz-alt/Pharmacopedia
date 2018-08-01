@@ -101,7 +101,7 @@ PharmaPy consists of four modules which must be located in the `src/` directory.
 
 # Credits
 
-Pharmacopedia is a portmanteau of “pharmacopoeia,” a repository for pharmaceuticals, and “encyclopedia,” a reservoir for knowledge. This project was created by Arthur Dysart as part of the “Pharmacy Counting” coding project. Scripts developed using Spyder IDE.
+Pharmacopedia is a portmanteau of “pharmacopoeia,” a repository for pharmaceuticals, and “encyclopedia,” a reservoir for knowledge. This project was created by Arthur Dysart as part of the 2018 Insight Data Engineering Fellowship program. Scripts developed using Spyder IDE.
 
 During development, sample data was obtained from the Centers for Medicare & Medicaid Services. The pre-cleaned data includes medical physician names, unique identification numbers, prescribed drugs, and total drug cost.
 
